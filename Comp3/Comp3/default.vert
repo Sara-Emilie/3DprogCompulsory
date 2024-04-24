@@ -1,24 +1,19 @@
 #version 330 core
-
-in vec3 vertexIn;
-in vec3 colorIn;
-in vec2 textureIn;
-
-out vec3 vertexOut;
-out vec3 colorOut;
-out vec2 textureOut;
+layout (location = 0) in vec3 aPos; 
+//layout (location = 1) in vec3 aColor;
+layout (location = 2) in vec2 aTexCoord;
+  
+//out vec3 OurColor; 
+out vec2 TexCoord;
 
 uniform mat4 model;
 uniform mat4 view;
-uniform mat4 proj;
+uniform mat4 projection;
 
 void main()
 {
-	colorOut = colorIn;
-	textureOut = textureIn;
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
 
-	vertexOut = (model * vec4(vertexIn, 1.0)).xyz;
-
-	//gl_Position = proj * view * model * vec4(vertexIn, 1.0);
-	gl_Position = vec4(vertexIn, 1.0);
-}
+    //OurColor = aColor;
+    TexCoord = vec2(aTexCoord.x, 1.0 - aTexCoord.y);
+}       

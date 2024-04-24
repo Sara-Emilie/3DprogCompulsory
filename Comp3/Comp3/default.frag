@@ -1,36 +1,13 @@
 #version 330 core
+out vec4 FinalColor;  
 
-struct Light
-{
-	vec3 position;
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
-};
+//in vec3 OurColor;
+in vec2 TexCoord;
 
-struct Material
-{
-	float shininess;
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
-};
-
-in vec3 colorOut;
-in vec3 vertexOut;
-in vec2 textureOut;
-out vec4 fragColor;
-
-uniform Light light;
-uniform Material material;
-uniform vec3 cameraPosition;
-
-uniform bool isLit;
-uniform bool isTextured;
-uniform sampler2D textureImage;
+uniform sampler2D ourTexture;
 
 void main()
 {
-	fragColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-
+   // FinalColor = texture(ourTexture, TexCoord) * vec4(ourColor, 1.0);
+   FinalColor = vec4(ourColor, 1.0);
 }

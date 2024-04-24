@@ -133,7 +133,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="main.cpp" />
@@ -285,7 +284,6 @@
     <None Include="Dependencies\includes\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Dependencies\Eigen\src\Cholesky\LDLT.h" />
@@ -885,6 +883,11 @@
     <ClInclude Include="Shaders\ShaderClass.h" />
     <ClInclude Include="Shaders\VAO.h" />
     <ClInclude Include="Shaders\VBO.h" />
+    <ClInclude Include="stb_image.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Textures\dirt.jpg" />
+    <Image Include="Textures\dirt.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,8 +1,11 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "Buffer.h"
 #include "Shaders/ShaderClass.h"
+#include "Shaders/VAO.h"
+#include "Shaders/VBO.h"
+#include "Shaders/EBO.h"
+
 
 
 class Cube
@@ -14,17 +17,20 @@ public:
 	~Cube();
 
 	void Update();
-	void Render();
+	void Render(const unsigned int height, const unsigned int width);
 
-	glm::vec3 GetPosition() { return m_position; }
+	glm::vec3 GetPosition() { return position; }
 
-	glm::mat4 m_model;
-	glm::vec3 m_position;
+	glm::mat4 model;
+	glm::vec3 position;
 
+
+	unsigned int VBO, VAO;
+
+	unsigned int ourTexture;
 
 private:
 
-	Buffer m_buffer;
 
 	
 };
