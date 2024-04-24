@@ -29,6 +29,8 @@ struct Material
 
 void main()
 {
+
+
     DirectionalLight dl;
     dl.direction = vec3(0, -1, 0);
     dl.color = vec3(1, 1, 1);

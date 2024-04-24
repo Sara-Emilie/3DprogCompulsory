@@ -22,6 +22,7 @@
 #include "Shaders/EBO.h"
 #include "Camera.h"
 #include "Cube.h"
+#include "stb_image.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -34,6 +35,7 @@ float MovementZ{ 0 };
 // Window dimensions
 const unsigned int width = 800;
 const unsigned int height = 600;
+
 
 
 int main()
@@ -69,18 +71,21 @@ int main()
 
 	Cube cube;
 
+	Camera camera(width, height, glm::vec3(0.0f, 10.0f, 100.0f));
+
 
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
 		
+
 		shaderprogram.Activate();
 
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 				glClear(GL_COLOR_BUFFER_BIT);
 
 
-				
+		camera.Inputs(window);
 				
 		glfwPollEvents();
 		glfwSwapBuffers(window);
@@ -91,10 +96,59 @@ int main()
 		//glUniformMatrix4fv(shaderprogram.shaderID, 1, GL_FALSE, &model[0][0]);
 		//shaderclass.SendUniformData("isLit", false);
 		//shaderclass.SendUniformData("isTextured", false);
+		glGenTextures(1, &cube.texture);
+		glBindTexture(GL_TEXTURE_2D, cube.texture);
 
-		glm::mat4 model = glm::mat4(1.f);
+		// set the texture wrapping/filtering options (on the currently bound texture object)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		// load and generate the texture
+		int width, height, nrChannels;
+		unsigned char* data = stbi_load("Textures/dirt.jpg", &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+		else
+		{
+			std::cout << "Failed to load texture" << std::endl;
+		}
+		stbi_image_free(data);
+
+
+
+		glGenTextures(1, &cube.specularTexture);
+		glBindTexture(GL_TEXTURE_2D, cube.specularTexture);
+
+		// set the texture wrapping/filtering options (on the currently bound texture object)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		// load and generate the texture
+		data = stbi_load("Textures/dirt_specular.jpg", &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+		else
+		{
+			std::cout << "Failed to load texture" << std::endl;
+		}
+		stbi_image_free(data);
+
+
+		shaderprogram.SendUniformData("ourTexture", 0);
+		shaderprogram.SendUniformData("specularTexture", 1);
+
 		//model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-		shaderprogram.SendUniformData("model", model);
+		shaderprogram.SendUniformData("model", cube.model);
 		//shader.setMat4("model", model);
 		cube.Render(height, width);
 		

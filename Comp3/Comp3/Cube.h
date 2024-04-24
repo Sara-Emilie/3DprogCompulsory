@@ -21,13 +21,14 @@ public:
 
 	glm::vec3 GetPosition() { return position; }
 
-	glm::mat4 model;
-	glm::vec3 position;
+	glm::mat4 model = glm::mat4(1.f);
+	glm::vec3 position = glm::vec3(0.f);;
 
 
 	unsigned int VBO, VAO, EBO;
 
 	unsigned int texture;
+	unsigned int specularTexture;
 
 private:
 

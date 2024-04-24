@@ -19,7 +19,7 @@ public:
 
 	GLuint GetShaderID() { return shaderID; };
 	// Constructor that build the Shader Program from 2 different shaders
-	ShaderClass();
+	ShaderClass(); 
 	ShaderClass(const char* vertexFile, const char* fragmentFile);
 
 	// Activates the Shader Program
