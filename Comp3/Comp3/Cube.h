@@ -17,7 +17,7 @@ public:
 	~Cube();
 
 	void Update();
-	void Render(const unsigned int height, const unsigned int width);
+	void Render();
 
 	glm::vec3 GetPosition() { return position; }
 
@@ -28,7 +28,7 @@ public:
 	unsigned int VBO, VAO, EBO;
 
 	unsigned int texture;
-	unsigned int specularTexture;
+	unsigned int textureSpecular;
 
 private:
 
