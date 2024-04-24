@@ -25,9 +25,9 @@ public:
 	glm::vec3 position;
 
 
-	unsigned int VBO, VAO;
+	unsigned int VBO, VAO, EBO;
 
-	unsigned int ourTexture;
+	unsigned int texture;
 
 private:
 

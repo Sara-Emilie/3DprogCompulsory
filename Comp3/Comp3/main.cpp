@@ -35,6 +35,7 @@ float MovementZ{ 0 };
 const unsigned int width = 800;
 const unsigned int height = 600;
 
+
 int main()
 {
 	// Initialize GLFW
@@ -80,6 +81,7 @@ int main()
 
 
 				
+				
 		glfwPollEvents();
 		glfwSwapBuffers(window);
 
@@ -89,7 +91,13 @@ int main()
 		//glUniformMatrix4fv(shaderprogram.shaderID, 1, GL_FALSE, &model[0][0]);
 		//shaderclass.SendUniformData("isLit", false);
 		//shaderclass.SendUniformData("isTextured", false);
+
+		glm::mat4 model = glm::mat4(1.f);
+		//model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+		shaderprogram.SendUniformData("model", model);
+		//shader.setMat4("model", model);
 		cube.Render(height, width);
+		
 
 	}
 
