@@ -62,4 +62,5 @@ void main()
     vec3 finalColor = ambientContribution + diffuseContribution + specularContribution;
 
     FragColor = vec4(finalColor, 1);//texture(ourTexture, TexCoord);  
+   //FragColor = vec4(1.0,1.0,1.0, 1);
 }
