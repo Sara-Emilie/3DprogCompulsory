@@ -22,6 +22,7 @@
 #include "Shaders/EBO.h"
 #include "Camera.h"
 #include "Cube.h"
+#include "Plane.h"
 #include "stb_image.h"
 
 
@@ -68,17 +69,22 @@ int main()
 
 	// Generates Shader object using shaders defiend in "shader.vs" and "shader.fs"
 
-	Cube cube;
+	
 
 	ShaderClass shaderprogram("default.vert", "default.frag");
 
 	shaderprogram.Activate();
 	
-	
+	Cube cube;
+	Plane plane;
+
 	glUniform1i(glGetUniformLocation(shaderprogram.shaderID, "ourTexture"), 0);
 	glUniform1i(glGetUniformLocation(shaderprogram.shaderID, "specularTexture"), 1);
 
-	Camera camera(width, height, glm::vec3(0.0f, 10.0f, 10.0f));
+	plane.model = scale(glm::mat4(1.0f), glm::vec3(10.0f, 10.0f, 10.0f));
+	plane.model = translate(plane.model, glm::vec3(0.0f, -0.051, 0.0f));
+
+	Camera camera(width, height, glm::vec3(0.0f, 10.0f, 0.0f));
 
 	
 	glEnable(GL_DEPTH_TEST);
@@ -96,21 +102,21 @@ int main()
 
 		camera.Inputs(window);
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderprogram, "camMatrix");
-		
-		glm::mat4 model = glm::mat4(1.f);
-	
-		glUniformMatrix4fv(glGetUniformLocation(shaderprogram.shaderID, "model"), 1, GL_FALSE, &model[0][0]);
 
-	
+		cube.model = translate(glm::mat4(1.0f), glm::vec3(MovementX, 0.0f, MovementZ));
+		glUniformMatrix4fv(glGetUniformLocation(shaderprogram.shaderID, "model"), 1, GL_FALSE, &cube.model[0][0]);
 		cube.Render();
 		
+		//plane.model = glm::mat4(1.0f);
+		glUniformMatrix4fv(glGetUniformLocation(shaderprogram.shaderID, "model"), 1, GL_FALSE, &plane.model[0][0]);
+		plane.Render();
+
+
+		processInput(window);
 				
 		glfwPollEvents();
 		glfwSwapBuffers(window);
 
-		
-	
-		
 
 	}
 
@@ -132,19 +138,20 @@ void processInput(GLFWwindow* window)
 		glfwSetWindowShouldClose(window, true);
 
 	//Cube movement
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) //left
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) //left
 	{
 		MovementX += speed;
 	}
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) //right
+
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) //right
 	{
 		MovementX -= speed;
 	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) //back
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) //back
 	{
 		MovementZ -= speed;
 	}
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) //forward
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) //forward
 	{
 		MovementZ += speed;
 	}
