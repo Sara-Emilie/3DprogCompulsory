@@ -29,7 +29,9 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
-float speed = 0.00001f;
+
+
+float speed = 0.1f;
 float MovementX{ 0 };
 float MovementZ{ 0 };
 
@@ -73,6 +75,7 @@ int main()
 	shaderprogram.Activate();
 	
 	Cube cube;
+
 	Plane plane;
 
 	glUniform1i(glGetUniformLocation(shaderprogram.shaderID, "ourTexture"), 0);
@@ -89,10 +92,15 @@ int main()
 	
 	glEnable(GL_DEPTH_TEST);
 
+	float lastframe = glfwGetTime();
+
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
 		
+		float currentFrame = glfwGetTime();
+		float deltaTime = currentFrame - lastframe;
+		lastframe = currentFrame;
 
 		shaderprogram.Activate();
 
@@ -127,7 +135,7 @@ int main()
 			{
 				//std::cout << barycentric.x << " " << barycentric.y << " " << barycentric.z << std::endl;
 				//std::cout << "p1: " << p1.x << " " << p1.y << " " << p1.z << std::endl;
-				//std::cout << "p2: " << p2.x << " " << p2.y << " " << p2.z << std::endl;
+				std::cout << "p2: " << p2.x << " " << p2.y << " " << p2.z << std::endl;
 				//std::cout << "p3: " << p3.x << " " << p3.y << " " << p3.z << std::endl;
 
 				float u = barycentric.x;
@@ -138,6 +146,7 @@ int main()
 				float R = p3.y;
 
 				cube.model[3].y = u*P + v*Q + w*R;
+				
 
 			}
 		}
@@ -146,7 +155,7 @@ int main()
 
 
 
-		cube.model = translate(cube.model, glm::vec3(MovementX, cube.model[3].y, MovementZ));
+		//cube.model = translate(cube.model, glm::vec3(MovementX, cube.model[3].y, MovementZ));
 		glUniformMatrix4fv(glGetUniformLocation(shaderprogram.shaderID, "model"), 1, GL_FALSE, &cube.model[0][0]);
 		cube.Render();
 		
@@ -154,6 +163,27 @@ int main()
 		glUniformMatrix4fv(glGetUniformLocation(shaderprogram.shaderID, "model"), 1, GL_FALSE, &plane.model[0][0]);
 		plane.Render();
 
+
+		//Cube movement
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) //left
+		{
+			cube.model[3].x += speed * deltaTime;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) //right
+		{
+			cube.model[3].x -= speed * deltaTime;
+		}
+		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) //back
+		{
+			cube.model[3].z -= speed * deltaTime;
+		}
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) //forward
+		{
+			cube.model[3].z += speed * deltaTime;
+		}
+		
+		
 
 		processInput(window);
 				
@@ -180,24 +210,24 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
-	//Cube movement
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) //left
-	{
-		MovementX += speed;
-	}
-	
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) //right
-	{
-		MovementX -= speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) //back
-	{
-		MovementZ -= speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) //forward
-	{
-		MovementZ += speed;
-	}
+	////Cube movement
+	//if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) //left
+	//{
+	//	MovementX += speed;
+	//}
+	//
+	//if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) //right
+	//{
+	//	MovementX -= speed;
+	//}
+	//if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) //back
+	//{
+	//	MovementZ -= speed;
+	//}
+	//if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) //forward
+	//{
+	//	MovementZ += speed;
+	//}
 
 }
 
