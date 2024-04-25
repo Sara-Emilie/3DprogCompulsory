@@ -29,7 +29,7 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
-float speed = 0.1f;
+float speed = 0.0001f;
 float MovementX{ 0 };
 float MovementZ{ 0 };
 
@@ -81,8 +81,10 @@ int main()
 	glUniform1i(glGetUniformLocation(shaderprogram.shaderID, "ourTexture"), 0);
 	glUniform1i(glGetUniformLocation(shaderprogram.shaderID, "specularTexture"), 1);
 
-	plane.model = scale(glm::mat4(1.0f), glm::vec3(10.0f, 10.0f, 10.0f));
-	plane.model = translate(plane.model, glm::vec3(0.0f, -0.051, 0.0f));
+	plane.model = scale(glm::mat4(1.0f), glm::vec3(20.0f, 20.0f, 20.0f));
+	plane.model = translate(plane.model, glm::vec3(0.0f, 1, 0.0f));
+
+	cube.model = translate(cube.model, glm::vec3(0.0f, 20.5f, 0.0f));
 
 	Camera camera(width, height, glm::vec3(0.0f, 10.0f, 0.0f));
 
@@ -103,7 +105,7 @@ int main()
 		camera.Inputs(window);
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderprogram, "camMatrix");
 
-		cube.model = translate(glm::mat4(1.0f), glm::vec3(MovementX, 0.0f, MovementZ));
+		cube.model = translate(cube.model, glm::vec3(MovementX, 0.0f, MovementZ));
 		glUniformMatrix4fv(glGetUniformLocation(shaderprogram.shaderID, "model"), 1, GL_FALSE, &cube.model[0][0]);
 		cube.Render();
 		
@@ -142,7 +144,7 @@ void processInput(GLFWwindow* window)
 	{
 		MovementX += speed;
 	}
-
+	
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) //right
 	{
 		MovementX -= speed;

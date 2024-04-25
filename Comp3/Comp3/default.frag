@@ -32,9 +32,9 @@ void main()
 
 
     DirectionalLight dl;
-    dl.direction = vec3(0, -1, 0);
+    dl.direction = vec3(0, 1, 0);
     dl.color = vec3(1, 1, 1);
-    dl.ambient = vec3(0.5);
+    dl.ambient = vec3(0.2);
 
     Material mat;
     mat.diffuse = vec3(texture(ourTexture, TexCoords));
