@@ -29,13 +29,13 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
-float speed = 0.0001f;
+float speed = 0.00001f;
 float MovementX{ 0 };
 float MovementZ{ 0 };
 
 // Window dimensions
-const unsigned int width = 800;
-const unsigned int height = 600;
+const unsigned int width = 1200;
+const unsigned int height = 800;
 
 
 
@@ -67,10 +67,7 @@ int main()
 	// Specify the viewport of OpenGL in the Window
 	glViewport(0, 0, width, height);
 
-	// Generates Shader object using shaders defiend in "shader.vs" and "shader.fs"
-
-	
-
+	// Generates Shader object
 	ShaderClass shaderprogram("default.vert", "default.frag");
 
 	shaderprogram.Activate();
@@ -81,10 +78,11 @@ int main()
 	glUniform1i(glGetUniformLocation(shaderprogram.shaderID, "ourTexture"), 0);
 	glUniform1i(glGetUniformLocation(shaderprogram.shaderID, "specularTexture"), 1);
 
-	plane.model = scale(glm::mat4(1.0f), glm::vec3(20.0f, 20.0f, 20.0f));
-	plane.model = translate(plane.model, glm::vec3(0.0f, 1, 0.0f));
+	//plane.model = scale(glm::mat4(1.0f), glm::vec3(20.0f, 20.0f, 20.0f));
+	//plane.model = translate(plane.model, glm::vec3(0.0f, 1, 0.0f));
 
-	cube.model = translate(cube.model, glm::vec3(0.0f, 20.5f, 0.0f));
+	//cube.model = translate(cube.model, glm::vec3(0.0f, 20.5f, 0.0f));
+	cube.model = scale(glm::mat4(1.0f), glm::vec3(0.05f, 0.05f, 0.05f));
 
 	Camera camera(width, height, glm::vec3(0.0f, 10.0f, 0.0f));
 
@@ -105,7 +103,50 @@ int main()
 		camera.Inputs(window);
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderprogram, "camMatrix");
 
-		cube.model = translate(cube.model, glm::vec3(MovementX, 0.0f, MovementZ));
+
+		//glm::vec3 Cube::calculateBarysentricCoordinates(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 position)
+
+		for (int i = 0; i < plane.triangles.size(); i++)
+		{
+			Vertex vp1 = plane.triangles[i].v1;
+			Vertex vp2 = plane.triangles[i].v2;
+			Vertex vp3 = plane.triangles[i].v3;
+
+			glm::vec3 p1 = glm::vec3(vp1.x, vp1.y, vp1.z);
+			glm::vec3 p2 = glm::vec3(vp2.x, vp2.y, vp2.z);
+			glm::vec3 p3 = glm::vec3(vp3.x, vp3.y, vp3.z);
+
+		
+
+
+			glm::vec3 barycentric = cube.calculateBarysentricCoordinates(p1, p2, p3, cube.model[3]);
+
+			//std::cout << barycentric.x << " " << barycentric.y << " " << barycentric.z << std::endl;
+		
+			if (barycentric.x >= 0 && barycentric.y >= 0 && barycentric.z >= 0 && barycentric.x <= 1 && barycentric.y <= 1 &&  barycentric.z <= 1)
+			{
+				//std::cout << barycentric.x << " " << barycentric.y << " " << barycentric.z << std::endl;
+				//std::cout << "p1: " << p1.x << " " << p1.y << " " << p1.z << std::endl;
+				//std::cout << "p2: " << p2.x << " " << p2.y << " " << p2.z << std::endl;
+				//std::cout << "p3: " << p3.x << " " << p3.y << " " << p3.z << std::endl;
+
+				float u = barycentric.x;
+				float P = p1.y;
+				float v = barycentric.y;
+				float Q = p2.y;
+				float w = barycentric.z;
+				float R = p3.y;
+
+				cube.model[3].y = u*P + v*Q + w*R;
+
+			}
+		}
+
+
+
+
+
+		cube.model = translate(cube.model, glm::vec3(MovementX, cube.model[3].y, MovementZ));
 		glUniformMatrix4fv(glGetUniformLocation(shaderprogram.shaderID, "model"), 1, GL_FALSE, &cube.model[0][0]);
 		cube.Render();
 		

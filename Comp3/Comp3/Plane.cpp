@@ -19,6 +19,18 @@ Plane::Plane()
 		0,2,3
 	};
 
+	Vertex v1 = { -0.5, 0, 0.5,			0,1,0,	 0,1 };
+	Vertex v2 = { 0.5, -0.2, 0.5,		0,1,0,	 1,1 };
+	Vertex v3 = { 0.5, 0, -0.5,			0,1,0,	 1,0 };
+	Vertex v4 = { -0.5, -0.2, -0.5,		0,1,0,	 0,0 };
+
+	Triangle t1 = { v1, v2, v3 };
+	Triangle t2 = { v1, v3, v4 };
+
+	triangles.push_back(t1);
+	triangles.push_back(t2);
+
+
 
 	
 	glGenBuffers(1, &VBO);

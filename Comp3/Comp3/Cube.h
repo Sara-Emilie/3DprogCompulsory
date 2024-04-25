@@ -18,11 +18,12 @@ public:
 
 	void Update();
 	void Render();
+	glm::vec3 calculateBarysentricCoordinates(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 position);
 
-	glm::vec3 GetPosition() { return position; }
+	glm::vec3 GetPosition() { return model[3]; }
 
 	glm::mat4 model = glm::mat4(1.f);
-	glm::vec3 position = glm::vec3(0.f);;
+	
 
 
 	unsigned int VBO, VAO, EBO;

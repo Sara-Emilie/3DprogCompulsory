@@ -2,6 +2,8 @@
 #include "Cube.h"
 
 #include "glm/gtx/transform.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include <glm/glm.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -159,3 +161,76 @@ void Cube::Render()
 	
 	
 }
+
+glm::vec3 Cube::calculateBarysentricCoordinates(glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 position)
+{
+	p1.y = 0;
+	p2.y = 0;
+	p3.y = 0;
+	position.y = 0;
+
+	glm::vec3 p12 = p2 - p1;
+	glm::vec3 p13 = p3 - p1;
+	//glm::vec3 n = p12 ^ p13;
+	glm::vec3 n = glm::cross(p12,p13);
+	float areal_123 = n.length(); // dobbelt areal
+	glm::vec3 baryc; // til retur. Husk
+
+	// u
+	glm::vec3 p = p2 - position;
+	glm::vec3 q = p3 - position;
+	n = glm::cross(p, q);
+	//n = p ^ q;
+	baryc.x = n.y / areal_123;
+
+	// v
+	p = p3 - position;
+	q = p1 - position;
+	//n = p ^ q;
+	n = glm::cross(p, q);
+	baryc.y = n.y / areal_123;
+
+	// w
+	p = p1 - position;
+	q = p2 - position;
+	/*n = p ^ q;*/
+	n = glm::cross(p, q);
+	baryc.z = n.y / areal_123;
+	return baryc;
+	
+	
+}
+
+//p1.y = 0;
+//p2.y = 0;
+//p3.y = 0;
+//p4.y = 0;
+//
+//glm::vec3 p12 = p2 - p1;
+//glm::vec3 p13 = p3 - p1;
+//glm::vec3 cross = glm::cross(p12, p13);
+//float area_123 = cross.y; // double the area
+//area_123 /= 2;
+//glm::vec3 baryc; // for return
+//
+//// u
+//glm::vec3 p = p2 - p4;
+//glm::vec3 q = p3 - p4;
+//glm::vec3 nu = glm::cross(q, p);
+//nu.y /= 2;
+//// double the area of p4pq
+//baryc.x = nu.y / area_123;
+//
+//// v
+//p = p3 - p4;
+//q = p1 - p4;
+//vec3 nv = glm::cross(p, q);
+//nv.y /= 2;// double the area of p4pq
+//baryc.y = nv.y / area_123;
+//
+//// w
+//p = p1 - p4;
+//q = p2 - p4;
+//vec3 nw = (glm::cross(p, q));
+//nw.y /= 2;// double the area of p4pq
+//baryc.z = nw.y / area_123;

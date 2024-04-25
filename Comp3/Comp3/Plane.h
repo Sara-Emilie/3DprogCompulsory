@@ -16,15 +16,14 @@ struct Vertex
 
 struct Triangle
 {
-	GLuint v1, v2, v3;
+	Vertex v1, v2, v3;
 };
 
 class Plane
 {
 public:
-	std::vector<Vertex> vertices;
+	/*std::vector<Vertex> Planevertices;*/
 	std::vector<Triangle> triangles;
-
 
 
 	unsigned int texture;
