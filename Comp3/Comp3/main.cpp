@@ -38,7 +38,8 @@ float speed = 1.1f;
 const unsigned int width = 1200;
 const unsigned int height = 800;
 
-
+//used code for bezier curve from here:
+//https://github.com/wolfcomp/OpenGLApp/blob/master/src/Math.h#L47-L69
 template <typename T>
 struct Bezier
 {
@@ -98,6 +99,7 @@ int main()
 	
 	Cube cube;
 	Cube NPC;
+	Cube Object;
 
 	Plane plane;
 
@@ -112,6 +114,9 @@ int main()
 
 	NPC.model = scale(glm::mat4(1.0f), glm::vec3(0.05f, 0.05f, 0.05f));
 
+	Object.model= translate(Object.model, glm::vec3(0.3f, 0.0f, 0.3f)); //trans, rot, scale
+	Object.model = scale(Object.model, glm::vec3(0.05f, 0.05f, 0.05f));
+	
 	Camera camera(width, height, glm::vec3(0.0f, 10.0f, 0.0f));
 
 	
@@ -120,10 +125,10 @@ int main()
 	float lastframe = glfwGetTime();
 
 
-	glm::vec3 p00 = glm::vec3(-0.0f, 0.0f, -0.5f);
-	glm::vec3 p01 = glm::vec3(-0.5f, 0.0f, 0.5f);
-	glm::vec3 p02 = glm::vec3(0.5f, 0.0f, -0.5f);
-	glm::vec3 p03 = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 p00 = glm::vec3(-0.0f, 0.0f, 0.0f);
+	glm::vec3 p01 = glm::vec3(-0.5f, 0.0f, 0.0f);
+	glm::vec3 p02 = glm::vec3(1.0f, 0.0f, -0.5f);
+	glm::vec3 p03 = glm::vec3(0.0f, 0.0f, -0.5f);
 
 
 	auto bez = Bezier <glm::vec3>(p00, p01, p02, p03);
@@ -261,7 +266,46 @@ int main()
 			}
 		}
 
+		//NPC
+		glUniformMatrix4fv(glGetUniformLocation(shaderprogram.shaderID, "model"), 1, GL_FALSE, &Object.model[0][0]);
+		Object.Render();
 
+		for (int i = 0; i < plane.triangles.size(); i++)
+		{
+			Vertex vp1 = plane.triangles[i].v1;
+			Vertex vp2 = plane.triangles[i].v2;
+			Vertex vp3 = plane.triangles[i].v3;
+
+			glm::vec3 p1 = glm::vec3(vp1.x, vp1.y, vp1.z);
+			glm::vec3 p2 = glm::vec3(vp2.x, vp2.y, vp2.z);
+			glm::vec3 p3 = glm::vec3(vp3.x, vp3.y, vp3.z);
+
+
+
+
+			glm::vec3 barycentric = Object.calculateBarysentricCoordinates(p2, p1, p3, Object.model[3]);
+
+			//std::cout << barycentric.x << " " << barycentric.y << " " << barycentric.z << std::endl;
+
+			if (barycentric.x >= 0 && barycentric.y >= 0 && barycentric.z >= 0 && barycentric.x <= 1 && barycentric.y <= 1 && barycentric.z <= 1)
+			{
+				//std::cout << barycentric.x << " " << barycentric.y << " " << barycentric.z << std::endl;
+				//std::cout << "p1: " << p1.x << " " << p1.y << " " << p1.z << std::endl;
+				//std::cout << "p2: " << p2.x << " " << p2.y << " " << p2.z << std::endl;
+				//std::cout << "p3: " << p3.x << " " << p3.y << " " << p3.z << std::endl;
+
+				float u = barycentric.x;
+				float P = p1.y;
+				float v = barycentric.y;
+				float Q = p2.y;
+				float w = barycentric.z;
+				float R = p3.y;
+
+				Object.model[3].y = (u * P + v * Q + w * R) + 0.05 / 2;
+
+
+			}
+		}
 
 		
 
