@@ -32,8 +32,7 @@ void processInput(GLFWwindow* window);
 
 
 float speed = 0.1f;
-float MovementX{ 0 };
-float MovementZ{ 0 };
+
 
 // Window dimensions
 const unsigned int width = 1200;
@@ -75,6 +74,7 @@ int main()
 	shaderprogram.Activate();
 	
 	Cube cube;
+	Cube NPC;
 
 	Plane plane;
 
@@ -84,8 +84,10 @@ int main()
 	//plane.model = scale(glm::mat4(1.0f), glm::vec3(20.0f, 20.0f, 20.0f));
 	//plane.model = translate(plane.model, glm::vec3(0.0f, 1, 0.0f));
 
-	//cube.model = translate(cube.model, glm::vec3(0.0f, 20.5f, 0.0f));
+	//cube.model = translate(cube.model, glm::vec3(0.0f, 1000.5f, 0.0f));
 	cube.model = scale(glm::mat4(1.0f), glm::vec3(0.05f, 0.05f, 0.05f));
+
+	NPC.model = scale(glm::mat4(1.0f), glm::vec3(0.05f, 0.05f, 0.05f));
 
 	Camera camera(width, height, glm::vec3(0.0f, 10.0f, 0.0f));
 
@@ -135,7 +137,7 @@ int main()
 			{
 				//std::cout << barycentric.x << " " << barycentric.y << " " << barycentric.z << std::endl;
 				//std::cout << "p1: " << p1.x << " " << p1.y << " " << p1.z << std::endl;
-				std::cout << "p2: " << p2.x << " " << p2.y << " " << p2.z << std::endl;
+				//std::cout << "p2: " << p2.x << " " << p2.y << " " << p2.z << std::endl;
 				//std::cout << "p3: " << p3.x << " " << p3.y << " " << p3.z << std::endl;
 
 				float u = barycentric.x;
@@ -145,17 +147,13 @@ int main()
 				float w = barycentric.z;
 				float R = p3.y;
 
-				cube.model[3].y = u*P + v*Q + w*R;
+				cube.model[3].y = (u*P + v*Q + w*R) *2.5;
 				
 
 			}
 		}
 
 
-
-
-
-		//cube.model = translate(cube.model, glm::vec3(MovementX, cube.model[3].y, MovementZ));
 		glUniformMatrix4fv(glGetUniformLocation(shaderprogram.shaderID, "model"), 1, GL_FALSE, &cube.model[0][0]);
 		cube.Render();
 		
@@ -183,7 +181,49 @@ int main()
 			cube.model[3].z += speed * deltaTime;
 		}
 		
+		//NPC
+		glUniformMatrix4fv(glGetUniformLocation(shaderprogram.shaderID, "model"), 1, GL_FALSE, &NPC.model[0][0]);
+		NPC.Render();
 		
+		
+		
+
+		for (int i = 0; i < plane.triangles.size(); i++)
+		{
+			Vertex vp1 = plane.triangles[i].v1;
+			Vertex vp2 = plane.triangles[i].v2;
+			Vertex vp3 = plane.triangles[i].v3;
+
+			glm::vec3 p1 = glm::vec3(vp1.x, vp1.y, vp1.z);
+			glm::vec3 p2 = glm::vec3(vp2.x, vp2.y, vp2.z);
+			glm::vec3 p3 = glm::vec3(vp3.x, vp3.y, vp3.z);
+
+
+
+
+			glm::vec3 barycentric = NPC.calculateBarysentricCoordinates(p1, p2, p3, NPC.model[3]);
+
+			//std::cout << barycentric.x << " " << barycentric.y << " " << barycentric.z << std::endl;
+
+			if (barycentric.x >= 0 && barycentric.y >= 0 && barycentric.z >= 0 && barycentric.x <= 1 && barycentric.y <= 1 && barycentric.z <= 1)
+			{
+				//std::cout << barycentric.x << " " << barycentric.y << " " << barycentric.z << std::endl;
+				//std::cout << "p1: " << p1.x << " " << p1.y << " " << p1.z << std::endl;
+				//std::cout << "p2: " << p2.x << " " << p2.y << " " << p2.z << std::endl;
+				//std::cout << "p3: " << p3.x << " " << p3.y << " " << p3.z << std::endl;
+
+				float u = barycentric.x;
+				float P = p1.y;
+				float v = barycentric.y;
+				float Q = p2.y;
+				float w = barycentric.z;
+				float R = p3.y;
+
+				NPC.model[3].y = (u * P + v * Q + w * R) * 2.5;
+
+
+			}
+		}
 
 		processInput(window);
 				

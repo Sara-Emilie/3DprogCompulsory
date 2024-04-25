@@ -31,7 +31,6 @@ Plane::Plane()
 	triangles.push_back(t2);
 
 
-
 	
 	glGenBuffers(1, &VBO);
 	glGenVertexArrays(1, &VAO);
