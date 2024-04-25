@@ -18,3 +18,6 @@ void main()
     FragPos = vec3(model * vec4(aPos, 1.0));
     TexCoords = vec2(aTexCoords.x, aTexCoords.y);
 } 
+
+
+//Used code we did in class with Ali (for .vert and .frag as well as cube), so it is very similar to https://github.com/AA-A93/3Dprog24-lighting-class.git

@@ -64,3 +64,6 @@ void main()
     FragColor = vec4(finalColor, 1);//texture(ourTexture, TexCoord);  
    //FragColor = vec4(1.0,1.0,1.0, 1);
 }
+
+
+//Used code we did in class with Ali (for .vert and .frag as well as cube), so it is very similar to https://github.com/AA-A93/3Dprog24-lighting-class.git

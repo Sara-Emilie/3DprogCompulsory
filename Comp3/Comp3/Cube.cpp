@@ -202,3 +202,7 @@ glm::vec3 Cube::calculateBarysentricCoordinates(glm::vec3 p1, glm::vec3 p2, glm:
 	return baryc;
 
 }
+
+
+//Used code we did in class with Ali (for .vert and .frag as well as cube), so it is very similar to https://github.com/AA-A93/3Dprog24-lighting-class.git
+//Also used code from the math III notes in the calculateBarysentricCoordinates function

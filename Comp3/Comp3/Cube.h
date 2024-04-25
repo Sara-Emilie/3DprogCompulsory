@@ -2,9 +2,6 @@
 
 #include <glm/glm.hpp>
 #include "Shaders/ShaderClass.h"
-#include "Shaders/VAO.h"
-#include "Shaders/VBO.h"
-#include "Shaders/EBO.h"
 #include "BoundingBox.h"
 
 
