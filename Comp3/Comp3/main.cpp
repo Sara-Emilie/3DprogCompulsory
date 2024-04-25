@@ -31,7 +31,7 @@ void processInput(GLFWwindow* window);
 
 
 
-float speed = 0.1f;
+float speed = 1.1f;
 
 
 // Window dimensions
@@ -39,6 +39,29 @@ const unsigned int width = 1200;
 const unsigned int height = 800;
 
 
+template <typename T>
+struct Bezier
+{
+	T p0, p1, p2, p3;
+
+	Bezier() : p0(T()), p1(T()), p2(T()), p3(T())
+	{
+	}
+
+	Bezier(T p0, T p1, T p2, T p3) : p0(p0), p1(p1), p2(p2), p3(p3)
+	{
+	}
+
+	T operator()(const float t)
+	{
+		const auto u = 1 - t;
+		const auto tp0 = powf(u, 3) * p0;
+		const auto tp1 = 3 * powf(u, 2) * t * p1;
+		const auto tp2 = 3 * u * powf(t, 2) * p2;
+		const auto tp3 = powf(t, 3) * p3;
+		return tp0 + tp1 + tp2 + tp3;
+	}
+};
 
 
 int main()
@@ -96,6 +119,17 @@ int main()
 
 	float lastframe = glfwGetTime();
 
+
+	glm::vec3 p00 = glm::vec3(-0.0f, 0.0f, -0.5f);
+	glm::vec3 p01 = glm::vec3(-0.5f, 0.0f, 0.5f);
+	glm::vec3 p02 = glm::vec3(0.5f, 0.0f, -0.5f);
+	glm::vec3 p03 = glm::vec3(0.0f, 0.0f, 0.0f);
+
+
+	auto bez = Bezier <glm::vec3>(p00, p01, p02, p03);
+
+	float t = 0.0f;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
@@ -103,6 +137,8 @@ int main()
 		float currentFrame = glfwGetTime();
 		float deltaTime = currentFrame - lastframe;
 		lastframe = currentFrame;
+
+		t = fmod(t + deltaTime, 1.0f);
 
 		shaderprogram.Activate();
 
@@ -147,12 +183,13 @@ int main()
 				float w = barycentric.z;
 				float R = p3.y;
 
-				cube.model[3].y = (u*P + v*Q + w*R) *2.5;
+				cube.model[3].y = (u * P + v * Q + w * R) + 0.05/2;
 				
 
 			}
 		}
 
+	
 
 		glUniformMatrix4fv(glGetUniformLocation(shaderprogram.shaderID, "model"), 1, GL_FALSE, &cube.model[0][0]);
 		cube.Render();
@@ -185,8 +222,7 @@ int main()
 		glUniformMatrix4fv(glGetUniformLocation(shaderprogram.shaderID, "model"), 1, GL_FALSE, &NPC.model[0][0]);
 		NPC.Render();
 		
-		
-		
+		NPC.model[3] = glm::vec4(bez(t),1);
 
 		for (int i = 0; i < plane.triangles.size(); i++)
 		{
@@ -201,7 +237,7 @@ int main()
 
 
 
-			glm::vec3 barycentric = NPC.calculateBarysentricCoordinates(p1, p2, p3, NPC.model[3]);
+			glm::vec3 barycentric = NPC.calculateBarysentricCoordinates(p2, p1, p3, NPC.model[3]);
 
 			//std::cout << barycentric.x << " " << barycentric.y << " " << barycentric.z << std::endl;
 
@@ -219,11 +255,17 @@ int main()
 				float w = barycentric.z;
 				float R = p3.y;
 
-				NPC.model[3].y = (u * P + v * Q + w * R) * 2.5;
+				NPC.model[3].y = (u * P + v * Q + w * R) + 0.05/2;
 
 
 			}
 		}
+
+
+
+		
+
+
 
 		processInput(window);
 				
