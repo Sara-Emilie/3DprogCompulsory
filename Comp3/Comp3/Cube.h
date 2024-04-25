@@ -5,6 +5,7 @@
 #include "Shaders/VAO.h"
 #include "Shaders/VBO.h"
 #include "Shaders/EBO.h"
+#include "BoundingBox.h"
 
 
 
@@ -27,6 +28,9 @@ public:
 
 
 	unsigned int VBO, VAO, EBO;
+
+	BoundingBox AABB;
+
 
 	unsigned int texture;
 	unsigned int textureSpecular;

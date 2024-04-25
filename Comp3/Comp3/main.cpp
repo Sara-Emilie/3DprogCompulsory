@@ -114,7 +114,7 @@ int main()
 
 	NPC.model = scale(glm::mat4(1.0f), glm::vec3(0.05f, 0.05f, 0.05f));
 
-	Object.model= translate(Object.model, glm::vec3(0.3f, 0.0f, 0.3f)); //trans, rot, scale
+	Object.model= translate(Object.model, glm::vec3(0.2f, 0.0f, 0.3f)); //trans, rot, scale
 	Object.model = scale(Object.model, glm::vec3(0.05f, 0.05f, 0.05f));
 	
 	Camera camera(width, height, glm::vec3(0.0f, 10.0f, 0.0f));
@@ -307,8 +307,18 @@ int main()
 			}
 		}
 
+		//Collision detection between cube and NPC
+		cube.Update();
+		NPC.Update();
 		
-
+		if (cube.AABB.TestAABBAABB(NPC.AABB))
+		{
+			std::cout << "Collision" << std::endl;
+		}
+		else
+		{
+			std::cout << "No Collision" << std::endl;
+		}
 
 
 		processInput(window);

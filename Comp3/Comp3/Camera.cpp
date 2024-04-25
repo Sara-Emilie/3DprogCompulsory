@@ -22,6 +22,7 @@ void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, ShaderClass& 
 
 	// Exports the camera matrix to the Vertex Shader
 	glUniformMatrix4fv(glGetUniformLocation(shader.shaderID, uniform), 1, GL_FALSE, glm::value_ptr(projection * view));
+	glUniform3fv(glGetUniformLocation(shader.shaderID, "viewPos"), 1, glm::value_ptr(Position));
 }
 
 void Camera::Inputs(GLFWwindow* window)

@@ -135,6 +135,8 @@ Cube::Cube()
 		std::cout << "Failed to load texture" << std::endl;
 	}
 	stbi_image_free(data);
+
+	 //change if u change the scale of the cube
 }
 
 Cube::~Cube()
@@ -144,11 +146,14 @@ Cube::~Cube()
 
 void Cube::Update()
 {
-	
+	AABB.Position = model[3];
+	AABB.Extent = glm::vec3(0.05);
+
 }
 
 void Cube::Render()
 {
+	
 	glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glActiveTexture(GL_TEXTURE1); // activate the texture unit first before binding texture

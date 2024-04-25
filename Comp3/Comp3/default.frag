@@ -32,8 +32,8 @@ void main()
 
 
     DirectionalLight dl;
-    dl.direction = vec3(0, 1, 0);
-    dl.color = vec3(1, 1, 1);
+    dl.direction = vec3(0, -1, 0);
+    dl.color = vec3(0.9, 1, 0.7);
     dl.ambient = vec3(0.2);
 
     Material mat;
