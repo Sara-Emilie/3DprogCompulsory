@@ -6,6 +6,7 @@ out vec4 FragColor;
 in vec3 Normal;
 in vec3 FragPos;
 in vec2 TexCoords;
+in vec3 Color;
 
 // uniforms
 uniform sampler2D ourTexture;
@@ -61,8 +62,9 @@ void main()
     // final color
     vec3 finalColor = ambientContribution + diffuseContribution + specularContribution;
 
-    FragColor = vec4(finalColor, 1);//texture(ourTexture, TexCoord);  
-   //FragColor = vec4(1.0,1.0,1.0, 1);
+    //FragColor = vec4(finalColor, 1);//texture(ourTexture, TexCoord);  
+    // FragColor = vec4(1.0,1.0,1.0, 1);
+    FragColor = vec4(Color,1);
 }
 
 

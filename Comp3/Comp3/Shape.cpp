@@ -1,14 +1,15 @@
 #include "Shape.h"
+#include <iostream>
 
 Vertex cubeVerticies[] = {
-    Vertex{glm::vec3(-1.0f, -1.0f,  1.0f), glm::vec3(-1.0f, -1.0f,  1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-    Vertex{glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec3(1.0f, -1.0f,  1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-    Vertex{glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(1.0f, -1.0f, -1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-    Vertex{glm::vec3(1.0f, -1.0f,  1.0f), glm::vec3(1.0f, -1.0f,  1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-    Vertex{glm::vec3(-1.0f,  1.0f,  1.0f), glm::vec3(-1.0f,  1.0f,  1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-    Vertex{glm::vec3(-1.0f,  1.0f, -1.0f), glm::vec3(-1.0f,  1.0f, -1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-    Vertex{glm::vec3(1.0f,  1.0f, -1.0f), glm::vec3(1.0f,  1.0f, -1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-    Vertex{glm::vec3(1.0f,  1.0f,  1.0f), glm::vec3(1.0f,  1.0f,  1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)}
+Vertex{glm::vec3(-1.0f, -1.0f,  1.0f), glm::vec3(-1.0f, -1.0f,  1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 1.0f)},
+Vertex{glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec3(1.0f, -1.0f,  1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 1.0f)},
+Vertex{glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(1.0f, -1.0f, -1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 0.0f)},
+Vertex{glm::vec3(1.0f, -1.0f,  1.0f), glm::vec3(1.0f, -1.0f,  1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
+Vertex{glm::vec3(-1.0f,  1.0f,  1.0f), glm::vec3(-1.0f,  1.0f,  1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 1.0f)},
+Vertex{glm::vec3(-1.0f,  1.0f, -1.0f), glm::vec3(-1.0f,  1.0f, -1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
+Vertex{glm::vec3(1.0f,  1.0f, -1.0f), glm::vec3(1.0f,  1.0f, -1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(0.0f, 1.0f, 1.0f)},
+Vertex{glm::vec3(1.0f,  1.0f,  1.0f), glm::vec3(1.0f,  1.0f,  1.0f), glm::vec2(0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)}
 };
 
 unsigned int cubeIndices[] = {
@@ -32,19 +33,21 @@ unsigned int cubeIndices[] = {
 
 Shape::Shape(Type shape)
 {
-    if (CUBE) 
+    if (shape == CUBE) 
     {
+        //std::cout << "Render Cube" << std::endl;
+
         std::vector<Vertex>vert(cubeVerticies, cubeVerticies + sizeof(cubeVerticies) / sizeof(Vertex));
         std::vector<GLuint>indi(cubeIndices, cubeIndices + sizeof(cubeIndices) / sizeof(GLuint));
         this->vert = vert;
         this->indi = indi;
     }
-    else if (OCTAHEDRON) 
+    else if (shape == OCTAHEDRON)
     {
         //hi
 
     }
-    else if (SUBDIVIDED_OCTAHEDRON)
+    else if (shape == SUBDIVIDED_OCTAHEDRON)
     {
         //hi
     }

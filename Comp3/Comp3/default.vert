@@ -8,6 +8,7 @@ layout (location = 3) in vec3 aColor;
 out vec3 Normal;
 out vec3 FragPos;
 out vec2 TexCoords;
+out vec3 Color;
   
 uniform mat4 model;
 uniform mat4 camMatrix;
@@ -18,7 +19,8 @@ void main()
     Normal = mat3(transpose(inverse(model))) * aNormal;
     FragPos = vec3(model * vec4(aPos, 1.0));
     TexCoords = vec2(aTexCoords.x, aTexCoords.y);
+    Color = aColor; 
 } 
 
 
-//Used code we did in class with Ali (for .vert and .frag as well as cube), so it is very similar to https://github.com/AA-A93/3Dprog24-lighting-class.git
+//Used code we did in class with Ali (for .vert and .frag), so it is very similar to https://github.com/AA-A93/3Dprog24-lighting-class.git

@@ -29,8 +29,8 @@ void processInput(GLFWwindow* window);
 
 
 
-float speed = 1.1f;
-
+float speed = 0.5f;
+bool isWireframe = false;
 
 // Window dimensions
 const unsigned int width = 1200;
@@ -119,15 +119,15 @@ int main()
 
 
 	//Camera
-	Camera camera(width, height, glm::vec3(0.0f, 1.0f, 0.0f));
+	Camera camera(width, height, glm::vec3(0.0f, 10.0f, 0.0f));
 
 	
 	glEnable(GL_DEPTH_TEST);
 	float lastframe = glfwGetTime();
 
 	Shape cube(Shape::CUBE);
-	Mesh CubeMesh(cube.getvert(), cube.getindi());
 
+	Mesh CubeMesh(cube.getvert(), cube.getindi());
 	CubeMesh.VAO.Bind();
 	glm::mat4 cubeModel = glm::mat4(1.f);
 	//cubeModel = glm::scale(cubeModel, glm::vec3(0.05f));
@@ -148,7 +148,14 @@ int main()
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		if (isWireframe) 
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+		else 
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
 
 
 		//Camera
@@ -180,7 +187,10 @@ void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-
+	if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
+		isWireframe = true;
+	if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
+		isWireframe = false;
 }
 
 
