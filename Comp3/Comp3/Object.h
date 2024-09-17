@@ -2,19 +2,23 @@
 #include "glm/glm.hpp"
 #include "Shaders/ShaderClass.h"
 #include "Mesh.h"
+#include "Collision.h"
+#include "BoundingBox.h"
 class Object
 {
 public:
 	Mesh mesh;
 	glm::vec3 currentPos;
+	glm::vec3 speed;
 	glm::vec3 prevPos;
 	glm::vec3 size;
 	glm::vec3 velocity;
 	float degree;
 	glm::vec3 axis;
+	glm::vec3 amount;
 
 	Object();
-	Object(Mesh& mesh, glm::vec3 startPos, glm::vec3 size, ShaderClass& shaderProgram);
+	Object(Mesh& mesh, glm::vec3 startPos, glm::vec3 size, ShaderClass& shaderProgram, glm::vec3 speed);
 
 	void setPos(glm::vec3 newPos);
 	void scale(glm::vec3 size);
@@ -26,6 +30,9 @@ public:
 	void Draw(ShaderClass& shaderProgram);
 	void Update(ShaderClass& shaderProgram);
 
+public:
+	BoundingBox AABB;
+	glm::mat4 model;
 
 };
 

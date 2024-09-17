@@ -19,6 +19,7 @@
 #include "Shape.h"
 #include "Mesh.h"
 #include "Object.h"
+#include "Collision.h"
 
 #include "Shaders/ShaderClass.h"
 #include "Camera.h"
@@ -63,55 +64,7 @@ int main()
 	ShaderClass shaderprogram("default.vert", "default.frag");
 	shaderprogram.Activate();
 	
-	//unsigned int texture;
-	//unsigned int textureSpecular;
-
-	////unsigned int texture;
-	//glGenTextures(1, &texture);
-	//glBindTexture(GL_TEXTURE_2D, texture);
-
-	//// set the texture wrapping/filtering options (on the currently bound texture object)
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	//// load and generate the texture
-	//int width, height, nrChannels;
-	//unsigned char* data = stbi_load("Textures/dirt.jpg", &width, &height, &nrChannels, 0);
-	//if (data)
-	//{
-	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	//	glGenerateMipmap(GL_TEXTURE_2D);
-	//}
-	//else
-	//{
-	//	std::cout << "Failed to load texture" << std::endl;
-	//}
-	//stbi_image_free(data);
-
-	////unsigned int textureSpecular;
-	//glGenTextures(1, &textureSpecular);
-	//glBindTexture(GL_TEXTURE_2D, textureSpecular);
-
-	//// set the texture wrapping/filtering options (on the currently bound texture object)
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	//// load and generate the texture
-	//data = stbi_load("Textures/dirt_specular.jpg", &width, &height, &nrChannels, 0);
-	//if (data)
-	//{
-	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	//	glGenerateMipmap(GL_TEXTURE_2D);
-	//}
-	//else
-	//{
-	//	std::cout << "Failed to load texture" << std::endl;
-	//}
-	//stbi_image_free(data);
+	
 
 
 	//
@@ -125,11 +78,41 @@ int main()
 	
 	glEnable(GL_DEPTH_TEST);
 	float lastframe = glfwGetTime();
+	glm::vec3 amount1 = glm::vec3(0.00, -0.02, 0.00);
+	glm::vec3 amount2= glm::vec3(0.02, 0, 0.02);
+	Shape Sphere1(Shape::SUBDIVIDED_OCTAHEDRON);
+	Mesh Sphere1Mesh(Sphere1.getvert(), Sphere1.getindi());
+	Object Sphere1Object(Sphere1Mesh, glm::vec3(1.0,4,1.0), glm::vec3(1.0), shaderprogram, amount1);
 
-	Shape cube(Shape::SUBDIVIDED_OCTAHEDRON);
-	Mesh CubeMesh(cube.getvert(), cube.getindi());
-	Object cubeObject(CubeMesh, glm::vec3(1.0,0,1.0), glm::vec3(1.0), shaderprogram);
-		
+	Shape Sphere2(Shape::SUBDIVIDED_OCTAHEDRON);
+	Mesh Sphere2Mesh(Sphere2.getvert(), Sphere2.getindi());
+	Object Sphere2Object(Sphere2Mesh, glm::vec3(4.0, 4, 1.0), glm::vec3(1.0), shaderprogram, amount2);
+
+// Cube 1: The Floor 
+	Shape cube1(Shape::CUBE);
+	Mesh cube1Mesh(cube1.getvert(), cube1.getindi());
+	Object cube1Object(cube1Mesh, glm::vec3(0.0, -100, 0.0), glm::vec3(10, 0.1, 10), shaderprogram, glm::vec3(0));
+
+	// Cube 2: Wall along X-axis (right side)
+	Shape cube2(Shape::CUBE);
+	Mesh cube2Mesh(cube2.getvert(), cube2.getindi());
+	Object cube2Object(cube2Mesh, glm::vec3(100.0, 0, 0.0), glm::vec3(0.1, 10, 10), shaderprogram, glm::vec3(0));
+
+	// Cube 3: Wall along X-axis (left side)
+	Shape cube3(Shape::CUBE);
+	Mesh cube3Mesh(cube3.getvert(), cube3.getindi());
+	Object cube3Object(cube3Mesh, glm::vec3(-100.0, 0, 0.0), glm::vec3(0.1, 10, 10), shaderprogram, glm::vec3(0));
+
+	// Cube 4: Wall along Z-axis (back side)
+	Shape cube4(Shape::CUBE);
+	Mesh cube4Mesh(cube4.getvert(), cube4.getindi());
+	Object cube4Object(cube4Mesh, glm::vec3(0.0, 0, 100.0), glm::vec3(10, 10, 0.1), shaderprogram, glm::vec3(0));
+
+	// Cube 5: Wall along Z-axis (front side)
+	Shape cube5(Shape::CUBE);
+	Mesh cube5Mesh(cube5.getvert(), cube5.getindi());
+	Object cube5Object(cube5Mesh, glm::vec3(0.0, 0, -100.0), glm::vec3(10, 10, 0.1), shaderprogram, glm::vec3(0));
+
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
@@ -160,8 +143,20 @@ int main()
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderprogram, "camMatrix");
 
 
-		cubeObject.Draw(shaderprogram);
+		Sphere1Object.Draw(shaderprogram);
+		Sphere2Object.Draw(shaderprogram);
 
+		cube1Object.Draw(shaderprogram);
+		cube2Object.Draw(shaderprogram);
+		cube3Object.Draw(shaderprogram);
+		cube4Object.Draw(shaderprogram);
+		cube5Object.Draw(shaderprogram);
+		
+		Sphere1Object.move(amount1);
+
+		Collision collide;
+		collide.CollideWithWall(Sphere1Object.AABB.Extent, Sphere1Object.AABB.Position, cube1Object.AABB.Extent, cube1Object.AABB.Position, amount1);
+		
 		processInput(window);
 				
 		glfwPollEvents();

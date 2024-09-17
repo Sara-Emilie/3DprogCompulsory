@@ -11,7 +11,7 @@ public:
 
 	BoundingBox();
 
-	bool TestAABBAABB(BoundingBox b)
+	/*bool TestAABBAABB(BoundingBox b)
 	{
 		auto a = *this;
 
@@ -19,6 +19,7 @@ public:
 		if (abs(a.Position[1] - b.Position[1]) > (a.Extent[1] + b.Extent[1])) return false;
 		if (abs(a.Position[2] - b.Position[2]) > (a.Extent[2] + b.Extent[2])) return false;
 		return true;
-	}
+	}*/
+
 
 };

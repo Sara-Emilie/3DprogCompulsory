@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Dependencies\includes\glm\detail\glm.cpp" />
     <ClCompile Include="glad.c" />
@@ -289,6 +290,7 @@
   <ItemGroup>
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="Dependencies\Eigen\src\Cholesky\LDLT.h" />
     <ClInclude Include="Dependencies\Eigen\src\Cholesky\LLT.h" />
     <ClInclude Include="Dependencies\Eigen\src\Cholesky\LLT_LAPACKE.h" />
