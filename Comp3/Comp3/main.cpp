@@ -18,6 +18,7 @@
 
 #include "Shape.h"
 #include "Mesh.h"
+#include "Object.h"
 
 #include "Shaders/ShaderClass.h"
 #include "Camera.h"
@@ -125,15 +126,10 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	float lastframe = glfwGetTime();
 
-	Shape cube(Shape::CUBE);
-
+	Shape cube(Shape::SUBDIVIDED_OCTAHEDRON);
 	Mesh CubeMesh(cube.getvert(), cube.getindi());
-	CubeMesh.VAO.Bind();
-	glm::mat4 cubeModel = glm::mat4(1.f);
-	//cubeModel = glm::scale(cubeModel, glm::vec3(0.05f));
-	shaderprogram.Activate();
-	glUniformMatrix4fv(glGetUniformLocation(shaderprogram.shaderID, "model"), 1, GL_FALSE, glm::value_ptr(cubeModel));
-
+	Object cubeObject(CubeMesh, glm::vec3(1.0,0,1.0), glm::vec3(1.0), shaderprogram);
+		
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
@@ -148,6 +144,7 @@ int main()
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		//wireframe
 		if (isWireframe) 
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -163,8 +160,7 @@ int main()
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderprogram, "camMatrix");
 
 
-		CubeMesh.Draw(shaderprogram, camera);
-
+		cubeObject.Draw(shaderprogram);
 
 		processInput(window);
 				

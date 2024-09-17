@@ -26,6 +26,6 @@ public:
 	Mesh();
 	Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices);
 
-	void Draw(ShaderClass& shader, Camera& camera);
+	void Draw(ShaderClass& shader);
 };
 #endif

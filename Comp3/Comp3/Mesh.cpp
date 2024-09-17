@@ -26,7 +26,7 @@ Mesh::Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices)
 };
 
 
-void Mesh::Draw(ShaderClass& shader, Camera& camera) 
+void Mesh::Draw(ShaderClass& shader) 
 {
 	shader.Activate();
 	VAO.Bind();
