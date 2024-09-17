@@ -30,13 +30,22 @@
     <ClCompile Include="Shaders\ShaderClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Cube.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Plane.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BoundingBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\EBO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\VAO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\VBO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -2238,16 +2247,25 @@
     <ClInclude Include="Shaders\ShaderClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Cube.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Plane.h">
+    <ClInclude Include="BoundingBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BoundingBox.h">
+    <ClInclude Include="Shaders\EBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\VAO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\VBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
