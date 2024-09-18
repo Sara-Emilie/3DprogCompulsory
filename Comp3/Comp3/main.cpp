@@ -81,40 +81,41 @@ int main()
 	glm::vec3 amount1 = glm::vec3(0.00, 0.0, 0.00);
 	glm::vec3 amount2= glm::vec3(0.02, 0, 0.02);
 
+	///////////////////// Walls and floor /////////////
 
-// Cube 1: The Floor 
-	Shape cube1(Shape::CUBE);
-	Mesh cube1Mesh(cube1.getvert(), cube1.getindi());
+	Shape cube(Shape::CUBE);
+
+	//Cube 1: The Floor 
+	Mesh cube1Mesh(cube.getvert(), cube.getindi());
 	Object cube1Object(cube1Mesh, glm::vec3(0.0, -50, 0.0), glm::vec3(5, 0.1, 5), shaderprogram);
 
-	// Cube 2: Wall along X-axis (right side)
-	Shape cube2(Shape::CUBE);
-	Mesh cube2Mesh(cube2.getvert(), cube2.getindi());
+	//Cube 2: Wall along X-axis (right side)
+	Mesh cube2Mesh(cube.getvert(), cube.getindi());
 	Object cube2Object(cube2Mesh, glm::vec3(50.0, 0, 0.0), glm::vec3(0.1, 5, 5), shaderprogram);
 
-	// Cube 3: Wall along X-axis (left side)
-	Shape cube3(Shape::CUBE);
-	Mesh cube3Mesh(cube3.getvert(), cube3.getindi());
+	//Cube 3: Wall along X-axis (left side)
+	Mesh cube3Mesh(cube.getvert(), cube.getindi());
 	Object cube3Object(cube3Mesh, glm::vec3(-50.0, 0, 0.0), glm::vec3(0.1, 5, 5), shaderprogram);
 
-	// Cube 4: Wall along Z-axis (back side)
-	Shape cube4(Shape::CUBE);
-	Mesh cube4Mesh(cube4.getvert(), cube4.getindi());
+	//Cube 4: Wall along Z-axis (back side)
+	Mesh cube4Mesh(cube.getvert(), cube.getindi());
 	Object cube4Object(cube4Mesh, glm::vec3(0.0, 0, 50.0), glm::vec3(5, 5, 0.1), shaderprogram);
 
-	// Cube 5: Wall along Z-axis (front side)
-	Shape cube5(Shape::CUBE);
-	Mesh cube5Mesh(cube5.getvert(), cube5.getindi());
+	//Cube 5: Wall along Z-axis (front side)
+	Mesh cube5Mesh(cube.getvert(), cube.getindi());
 	Object cube5Object(cube5Mesh, glm::vec3(0.0, 0, -50.0), glm::vec3(5, 5, 0.1), shaderprogram);
-	
+					
+	//////////////////// Balls //////////////////////
+
 	Shape Sphere(Shape::SUBDIVIDED_OCTAHEDRON);
 	Mesh BallMesh(Sphere.getvert(), Sphere.getindi());
 	int index = 0;
+	float size = 0.1;
 
-	Object* Ball[9] = {};
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++) {
-			Ball[index] = new Object(BallMesh, glm::vec3((float)i * 10, 0.5, (float)j *10), glm::vec3(0.1, 0.1, 0.1f), shaderprogram, glm::vec3(0, 0.0, 0.0), true, i * 0.2f);
+	Object* Ball[16] = {};
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			Ball[index] = new Object(BallMesh, glm::vec3((float)i * 10, 0.5, (float)j *10), glm::vec3(size, size, size), shaderprogram, glm::vec3(0, 0.0, 0.0), true, i * 0.2f);
 			Ball[index]->velocity.z = 0.05 * (rand() * 0.0005);
 			Ball[index]->velocity.x = 0.03 * (rand() * 0.0005);
 			Ball[index]->velocity.y = 0.04;
@@ -152,8 +153,6 @@ int main()
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderprogram, "camMatrix");
 
 
-		//Sphere1Object.Draw(shaderprogram);
-		//Sphere2Object.Draw(shaderprogram);
 
 		cube1Object.Draw(shaderprogram);
 		cube2Object.Draw(shaderprogram);
@@ -161,25 +160,44 @@ int main()
 		cube4Object.Draw(shaderprogram);
 		cube5Object.Draw(shaderprogram);
 		
-		//Sphere1Object.move(amount1);
+		
 		Collision collide;
 		
-		for (int i = 0; i < 9; i++) 
+		for (int i = 0; i < 16; i++) 
 		{
 			Ball[i]->Draw(shaderprogram);
 		
-
+			//Collide with walls
 			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube1Object.AABB.Extent, cube1Object.AABB.Position,Ball[i]->velocity);
 			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube2Object.AABB.Extent, cube2Object.AABB.Position, Ball[i]->velocity);
 			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube3Object.AABB.Extent, cube3Object.AABB.Position, Ball[i]->velocity);
 			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube4Object.AABB.Extent, cube4Object.AABB.Position, Ball[i]->velocity);
 			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube5Object.AABB.Extent, cube5Object.AABB.Position, Ball[i]->velocity);
+			
+			//Collide with other balls
+			for (int j = i + 1; j < 16; j++) 
+			{
+				collide.CollideWithBall(
+					Ball[i]->AABB.Extent,
+					Ball[i]->AABB.Position,
+					Ball[j]->AABB.Extent,
+					Ball[j]->AABB.Position,
+					Ball[i]->velocity,
+					Ball[i]->radius
+				);
+
+			
+				collide.CollideWithBall(
+					Ball[j]->AABB.Extent,
+					Ball[j]->AABB.Position,
+					Ball[i]->AABB.Extent,
+					Ball[i]->AABB.Position,
+					Ball[j]->velocity,
+					Ball[j]->radius
+				);
+			}
 
 		}
-		
-
-
-		
 		
 		
 		processInput(window);

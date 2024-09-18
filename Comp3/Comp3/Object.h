@@ -16,6 +16,7 @@ public:
 	float degree;
 	glm::vec3 axis;
 	glm::vec3 amount;
+	float radius;
 
 	bool hasGravity;
 	float mass;

@@ -20,6 +20,7 @@ Object::Object(Mesh& mesh, glm::vec3 startPos, glm::vec3 size, ShaderClass& shad
 
 	this->hasGravity = true;
 	this->mass = mass;
+	this->radius = size.x / 2;
 
 	model = glm::mat4(1.f);
 	model = glm::scale(this->size);
