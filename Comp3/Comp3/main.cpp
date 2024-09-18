@@ -77,6 +77,7 @@ int main()
 	
 	glEnable(GL_DEPTH_TEST);
 	float lastframe = glfwGetTime();
+
 	glm::vec3 amount1 = glm::vec3(0.00, 0.0, 0.00);
 	glm::vec3 amount2= glm::vec3(0.02, 0, 0.02);
 
