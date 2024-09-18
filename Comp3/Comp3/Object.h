@@ -17,8 +17,12 @@ public:
 	glm::vec3 axis;
 	glm::vec3 amount;
 
+	bool hasGravity;
+	float mass;
+
 	Object();
-	Object(Mesh& mesh, glm::vec3 startPos, glm::vec3 size, ShaderClass& shaderProgram, glm::vec3 speed);
+	Object(Mesh& mesh, glm::vec3 startPos, glm::vec3 size, ShaderClass& shaderProgram);
+	Object(Mesh& mesh, glm::vec3 startPos, glm::vec3 size, ShaderClass& shaderProgram, glm::vec3 speed, bool hasGravity, float mass);
 
 	void setPos(glm::vec3 newPos);
 	void scale(glm::vec3 size);
@@ -29,6 +33,7 @@ public:
 
 	void Draw(ShaderClass& shaderProgram);
 	void Update(ShaderClass& shaderProgram);
+
 
 public:
 	BoundingBox AABB;

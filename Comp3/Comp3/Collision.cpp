@@ -25,7 +25,7 @@ void Collision::CollideWithWall(glm::vec3 Extentball, glm::vec3 Positionball, gl
         std::cout << length << std::endl;
         
         v = glm::reflect(v, normal);
-        //v *= 0.0002f;
+        //v *= 0.99f;
        
 
     }

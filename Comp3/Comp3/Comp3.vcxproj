@@ -136,8 +136,8 @@
     <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Dependencies\includes\glm\detail\glm.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Object.cpp" />

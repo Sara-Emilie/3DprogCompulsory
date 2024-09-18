@@ -14,6 +14,11 @@
 #include "Shaders/EBO.h"
 #include "Shaders/VBO.h"
 
+struct Triangle 
+{
+	std::vector<Vertex> verticies;
+};
+
 class Mesh
 {
 public:

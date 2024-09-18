@@ -78,40 +78,49 @@ int main()
 	
 	glEnable(GL_DEPTH_TEST);
 	float lastframe = glfwGetTime();
-	glm::vec3 amount1 = glm::vec3(0.00, -0.02, 0.00);
+	glm::vec3 amount1 = glm::vec3(0.00, 0.0, 0.00);
 	glm::vec3 amount2= glm::vec3(0.02, 0, 0.02);
-	Shape Sphere1(Shape::SUBDIVIDED_OCTAHEDRON);
-	Mesh Sphere1Mesh(Sphere1.getvert(), Sphere1.getindi());
-	Object Sphere1Object(Sphere1Mesh, glm::vec3(1.0,4,1.0), glm::vec3(1.0), shaderprogram, amount1);
 
-	Shape Sphere2(Shape::SUBDIVIDED_OCTAHEDRON);
-	Mesh Sphere2Mesh(Sphere2.getvert(), Sphere2.getindi());
-	Object Sphere2Object(Sphere2Mesh, glm::vec3(4.0, 4, 1.0), glm::vec3(1.0), shaderprogram, amount2);
 
 // Cube 1: The Floor 
 	Shape cube1(Shape::CUBE);
 	Mesh cube1Mesh(cube1.getvert(), cube1.getindi());
-	Object cube1Object(cube1Mesh, glm::vec3(0.0, -100, 0.0), glm::vec3(10, 0.1, 10), shaderprogram, glm::vec3(0));
+	Object cube1Object(cube1Mesh, glm::vec3(0.0, -50, 0.0), glm::vec3(5, 0.1, 5), shaderprogram);
 
 	// Cube 2: Wall along X-axis (right side)
 	Shape cube2(Shape::CUBE);
 	Mesh cube2Mesh(cube2.getvert(), cube2.getindi());
-	Object cube2Object(cube2Mesh, glm::vec3(100.0, 0, 0.0), glm::vec3(0.1, 10, 10), shaderprogram, glm::vec3(0));
+	Object cube2Object(cube2Mesh, glm::vec3(50.0, 0, 0.0), glm::vec3(0.1, 5, 5), shaderprogram);
 
 	// Cube 3: Wall along X-axis (left side)
 	Shape cube3(Shape::CUBE);
 	Mesh cube3Mesh(cube3.getvert(), cube3.getindi());
-	Object cube3Object(cube3Mesh, glm::vec3(-100.0, 0, 0.0), glm::vec3(0.1, 10, 10), shaderprogram, glm::vec3(0));
+	Object cube3Object(cube3Mesh, glm::vec3(-50.0, 0, 0.0), glm::vec3(0.1, 5, 5), shaderprogram);
 
 	// Cube 4: Wall along Z-axis (back side)
 	Shape cube4(Shape::CUBE);
 	Mesh cube4Mesh(cube4.getvert(), cube4.getindi());
-	Object cube4Object(cube4Mesh, glm::vec3(0.0, 0, 100.0), glm::vec3(10, 10, 0.1), shaderprogram, glm::vec3(0));
+	Object cube4Object(cube4Mesh, glm::vec3(0.0, 0, 50.0), glm::vec3(5, 5, 0.1), shaderprogram);
 
 	// Cube 5: Wall along Z-axis (front side)
 	Shape cube5(Shape::CUBE);
 	Mesh cube5Mesh(cube5.getvert(), cube5.getindi());
-	Object cube5Object(cube5Mesh, glm::vec3(0.0, 0, -100.0), glm::vec3(10, 10, 0.1), shaderprogram, glm::vec3(0));
+	Object cube5Object(cube5Mesh, glm::vec3(0.0, 0, -50.0), glm::vec3(5, 5, 0.1), shaderprogram);
+	
+	Shape Sphere(Shape::SUBDIVIDED_OCTAHEDRON);
+	Mesh BallMesh(Sphere.getvert(), Sphere.getindi());
+	int index = 0;
+
+	Object* Ball[9] = {};
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			Ball[index] = new Object(BallMesh, glm::vec3((float)i * 10, 0.5, (float)j *10), glm::vec3(0.1, 0.1, 0.1f), shaderprogram, glm::vec3(0, 0.0, 0.0), true, i * 0.2f);
+			Ball[index]->velocity.z = 0.05 * (rand() * 0.0005);
+			Ball[index]->velocity.x = 0.03 * (rand() * 0.0005);
+			Ball[index]->velocity.y = 0.04;
+			index++;
+		}
+	}
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -143,8 +152,8 @@ int main()
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderprogram, "camMatrix");
 
 
-		Sphere1Object.Draw(shaderprogram);
-		Sphere2Object.Draw(shaderprogram);
+		//Sphere1Object.Draw(shaderprogram);
+		//Sphere2Object.Draw(shaderprogram);
 
 		cube1Object.Draw(shaderprogram);
 		cube2Object.Draw(shaderprogram);
@@ -152,10 +161,26 @@ int main()
 		cube4Object.Draw(shaderprogram);
 		cube5Object.Draw(shaderprogram);
 		
-		Sphere1Object.move(amount1);
-
+		//Sphere1Object.move(amount1);
 		Collision collide;
-		collide.CollideWithWall(Sphere1Object.AABB.Extent, Sphere1Object.AABB.Position, cube1Object.AABB.Extent, cube1Object.AABB.Position, amount1);
+		
+		for (int i = 0; i < 9; i++) 
+		{
+			Ball[i]->Draw(shaderprogram);
+		
+
+			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube1Object.AABB.Extent, cube1Object.AABB.Position,Ball[i]->velocity);
+			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube2Object.AABB.Extent, cube2Object.AABB.Position, Ball[i]->velocity);
+			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube3Object.AABB.Extent, cube3Object.AABB.Position, Ball[i]->velocity);
+			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube4Object.AABB.Extent, cube4Object.AABB.Position, Ball[i]->velocity);
+			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube5Object.AABB.Extent, cube5Object.AABB.Position, Ball[i]->velocity);
+
+		}
+		
+
+
+		
+		
 		
 		processInput(window);
 				
