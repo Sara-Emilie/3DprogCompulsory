@@ -7,7 +7,7 @@ Object::Object()
 	
 }
 
-Object::Object(Mesh& mesh, glm::vec3 startPos, glm::vec3 size, ShaderClass& shaderProgram, glm::vec3 speed, bool hasGravity, float mass)
+Object::Object(Mesh& mesh, glm::vec3 startPos, glm::vec3 size, ShaderClass& shaderProgram, glm::vec3 speed, bool hasGravity, float mass) //with physics
 {
 	this->mesh = mesh;
 	this->currentPos = startPos;
@@ -105,9 +105,12 @@ void Object::Update(ShaderClass& shaderProgram)
 }
 
 
-void Object::Draw(ShaderClass& shaderProgram)
+void Object::Draw(ShaderClass& shaderProgram, bool isRunning)
 {
-	updateMovement();
+	if (isRunning) {
+		updateMovement();
+	}
+	
 	Update(shaderProgram);
 	this->mesh.Draw(shaderProgram);
 }

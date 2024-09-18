@@ -30,9 +30,9 @@ public:
 	void rotate(float degree, glm::vec3 axis);
 
 	void move(glm::vec3 amount);
-	virtual void updateMovement(); //so physics class can overide
+	virtual void updateMovement(); //so physics class can overide when made TODO
 
-	void Draw(ShaderClass& shaderProgram);
+	void Draw(ShaderClass& shaderProgram, bool isRunning);
 	void Update(ShaderClass& shaderProgram);
 
 

@@ -33,6 +33,7 @@ void processInput(GLFWwindow* window);
 
 float speed = 0.5f;
 bool isWireframe = false;
+bool isRunning = false;
 
 // Window dimensions
 const unsigned int width = 1200;
@@ -64,10 +65,8 @@ int main()
 	ShaderClass shaderprogram("default.vert", "default.frag");
 	shaderprogram.Activate();
 	
-	
 
-
-	//
+	//TODO fix texture
 	glUniform1i(glGetUniformLocation(shaderprogram.shaderID, "ourTexture"), 0);
 	glUniform1i(glGetUniformLocation(shaderprogram.shaderID, "specularTexture"), 1);
 
@@ -154,18 +153,18 @@ int main()
 
 
 
-		cube1Object.Draw(shaderprogram);
-		cube2Object.Draw(shaderprogram);
-		cube3Object.Draw(shaderprogram);
-		cube4Object.Draw(shaderprogram);
-		cube5Object.Draw(shaderprogram);
+		cube1Object.Draw(shaderprogram, isRunning);
+		cube2Object.Draw(shaderprogram, isRunning);
+		cube3Object.Draw(shaderprogram, isRunning);
+		cube4Object.Draw(shaderprogram, isRunning);
+		cube5Object.Draw(shaderprogram, isRunning);
 		
 		
 		Collision collide;
 		
 		for (int i = 0; i < 16; i++) 
 		{
-			Ball[i]->Draw(shaderprogram);
+			Ball[i]->Draw(shaderprogram, isRunning);
 		
 			//Collide with walls
 			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube1Object.AABB.Extent, cube1Object.AABB.Position,Ball[i]->velocity);
@@ -225,6 +224,8 @@ void processInput(GLFWwindow* window)
 		isWireframe = true;
 	if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
 		isWireframe = false;
+	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+		isRunning = true;
 }
 
 
