@@ -21,6 +21,8 @@
 #include "Object.h"
 #include "Collision.h"
 
+#include "BSplineFlate.h"
+
 #include "Shaders/ShaderClass.h"
 #include "Camera.h"
 #include "stb_image.h"
@@ -32,7 +34,7 @@ void processInput(GLFWwindow* window);
 
 
 float speed = 0.5f;
-bool isWireframe = false;
+bool isWireframe = true;
 bool isRunning = false;
 
 // Window dimensions
@@ -80,6 +82,10 @@ int main()
 
 	glm::vec3 amount1 = glm::vec3(0.00, 0.0, 0.00);
 	glm::vec3 amount2= glm::vec3(0.02, 0, 0.02);
+
+	BSplineFlate BSS;
+	Mesh BSSMESH(BSS.getvert(), BSS.getindi());
+	
 
 	///////////////////// Walls and floor /////////////
 
@@ -132,6 +138,8 @@ int main()
 		lastframe = currentFrame;
 	
 
+		//BSS.drawSurface(shaderprogram, BSS);
+		BSSMESH.Draw(shaderprogram);
 
 		shaderprogram.Activate();
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -154,50 +162,50 @@ int main()
 
 
 
-		cube1Object.Draw(shaderprogram, isRunning);
+		/*cube1Object.Draw(shaderprogram, isRunning);
 		cube2Object.Draw(shaderprogram, isRunning);
 		cube3Object.Draw(shaderprogram, isRunning);
 		cube4Object.Draw(shaderprogram, isRunning);
 		cube5Object.Draw(shaderprogram, isRunning);
-		
-		
+		*/
+	
 		Collision collide;
 		
-		for (int i = 0; i < 16; i++) 
-		{
-			Ball[i]->Draw(shaderprogram, isRunning);
-		
-			//Collide with walls
-			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube1Object.AABB.Extent, cube1Object.AABB.Position,Ball[i]->velocity);
-			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube2Object.AABB.Extent, cube2Object.AABB.Position, Ball[i]->velocity);
-			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube3Object.AABB.Extent, cube3Object.AABB.Position, Ball[i]->velocity);
-			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube4Object.AABB.Extent, cube4Object.AABB.Position, Ball[i]->velocity);
-			collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube5Object.AABB.Extent, cube5Object.AABB.Position, Ball[i]->velocity);
-			
-			//Collide with other balls
-			for (int j = i + 1; j < 16; j++) 
-			{
-				collide.CollideWithBall(
-					Ball[i]->AABB.Extent,
-					Ball[i]->AABB.Position,
-					Ball[j]->AABB.Extent,
-					Ball[j]->AABB.Position,
-					Ball[i]->velocity,
-					Ball[i]->radius
-				);
+		//for (int i = 0; i < 16; i++) 
+		//{
+		//	Ball[i]->Draw(shaderprogram, isRunning);
+		//
+		//	//Collide with walls
+		//	collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube1Object.AABB.Extent, cube1Object.AABB.Position,Ball[i]->velocity);
+		//	collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube2Object.AABB.Extent, cube2Object.AABB.Position, Ball[i]->velocity);
+		//	collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube3Object.AABB.Extent, cube3Object.AABB.Position, Ball[i]->velocity);
+		//	collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube4Object.AABB.Extent, cube4Object.AABB.Position, Ball[i]->velocity);
+		//	collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube5Object.AABB.Extent, cube5Object.AABB.Position, Ball[i]->velocity);
+		//	
+		//	//Collide with other balls
+		//	for (int j = i + 1; j < 16; j++) 
+		//	{
+		//		collide.CollideWithBall(
+		//			Ball[i]->AABB.Extent,
+		//			Ball[i]->AABB.Position,
+		//			Ball[j]->AABB.Extent,
+		//			Ball[j]->AABB.Position,
+		//			Ball[i]->velocity,
+		//			Ball[i]->radius
+		//		);
 
-			
-				collide.CollideWithBall(
-					Ball[j]->AABB.Extent,
-					Ball[j]->AABB.Position,
-					Ball[i]->AABB.Extent,
-					Ball[i]->AABB.Position,
-					Ball[j]->velocity,
-					Ball[j]->radius
-				);
-			}
+		//	
+		//		collide.CollideWithBall(
+		//			Ball[j]->AABB.Extent,
+		//			Ball[j]->AABB.Position,
+		//			Ball[i]->AABB.Extent,
+		//			Ball[i]->AABB.Position,
+		//			Ball[j]->velocity,
+		//			Ball[j]->radius
+		//		);
+		//	}
 
-		}
+		//}
 		
 		
 		processInput(window);

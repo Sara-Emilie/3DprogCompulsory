@@ -4,6 +4,7 @@
 #include "Mesh.h"
 #include "Collision.h"
 #include "BoundingBox.h"
+#include "BSplineFlate.h"
 class Object
 {
 public:
@@ -39,6 +40,8 @@ public:
 public:
 	BoundingBox AABB;
 	glm::mat4 model;
+
+
 
 };
 

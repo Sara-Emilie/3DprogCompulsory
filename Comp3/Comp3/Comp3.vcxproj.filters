@@ -54,6 +54,9 @@
     <ClCompile Include="Dependencies\includes\glm\detail\glm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BSplineFlate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.frag" />
@@ -2278,6 +2281,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Dependencies\includes\glm\vector_relational.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BSplineFlate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
