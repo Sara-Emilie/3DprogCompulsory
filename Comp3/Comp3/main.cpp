@@ -161,7 +161,7 @@ int main()
 
 		//Camera
 		camera.Inputs(window);
-		camera.Matrix(45.0f, 0.1f, 100.0f, shaderprogram, "camMatrix");
+		camera.Matrix(45.0f, 0.1f, 1000.0f, shaderprogram, "camMatrix");
 
 		terrainObject.DrawArray(shaderprogram, isRunning);
 
