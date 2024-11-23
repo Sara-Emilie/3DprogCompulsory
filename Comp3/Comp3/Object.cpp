@@ -115,3 +115,13 @@ void Object::Draw(ShaderClass& shaderProgram, bool isRunning)
 	this->mesh.Draw(shaderProgram);
 }
 
+void Object::DrawArray(ShaderClass& shaderProgram, bool isRunning)
+{
+	if (isRunning) {
+		updateMovement();
+	}
+
+	Update(shaderProgram);
+	this->mesh.DrawPoints(shaderProgram);
+}
+

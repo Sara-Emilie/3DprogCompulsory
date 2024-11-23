@@ -30,7 +30,10 @@ public:
 
 	Mesh();
 	Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices);
+	Mesh(std::vector <Vertex>& vertices);
 
 	void Draw(ShaderClass& shader);
+
+	void DrawPoints(ShaderClass& shader);
 };
 #endif

@@ -396,3 +396,5 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/Comp3/Comp3/HøydeData/Fil.txt
+/Comp3/Comp3/HøydeData/Fil2.txt

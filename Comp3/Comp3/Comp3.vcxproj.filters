@@ -57,6 +57,9 @@
     <ClCompile Include="BSplineFlate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.frag" />
@@ -2284,6 +2287,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BSplineFlate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

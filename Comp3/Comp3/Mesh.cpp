@@ -23,7 +23,23 @@ Mesh::Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices)
 	VBO.Unbind();
 	EBO.Unbind();
 
-};
+}
+Mesh::Mesh(std::vector<Vertex>& vertices)
+{
+	Mesh::vertices = vertices;
+
+	VAO.Bind();
+	VBO VBO(vertices);
+	VAO.LinkAttrib(VBO, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0); //pos
+	VAO.LinkAttrib(VBO, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float))); //normals
+	VAO.LinkAttrib(VBO, 2, 2, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float))); // tex
+	VAO.LinkAttrib(VBO, 3, 3, GL_FLOAT, sizeof(Vertex), (void*)(8 * sizeof(float))); // color
+
+	VAO.Unbind();
+	VBO.Unbind();
+
+}
+;
 
 
 void Mesh::Draw(ShaderClass& shader) 
@@ -32,4 +48,11 @@ void Mesh::Draw(ShaderClass& shader)
 	VAO.Bind();
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
-};
+}
+void Mesh::DrawPoints(ShaderClass& shader)
+{
+	shader.Activate();
+	VAO.Bind();
+	glDrawArrays(GL_POINTS, 0, vertices.size());
+}
+;

@@ -147,6 +147,7 @@
     <ClCompile Include="Shaders\VAO.cpp" />
     <ClCompile Include="Shaders\VBO.cpp" />
     <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="default.frag" />
@@ -894,6 +895,7 @@
     <ClInclude Include="Shaders\VBO.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Textures\dirt.jpg" />

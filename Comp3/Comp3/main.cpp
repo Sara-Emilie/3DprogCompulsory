@@ -22,6 +22,7 @@
 #include "Collision.h"
 
 #include "BSplineFlate.h"
+#include "terrain.h"
 
 #include "Shaders/ShaderClass.h"
 #include "Camera.h"
@@ -83,9 +84,11 @@ int main()
 	glm::vec3 amount1 = glm::vec3(0.00, 0.0, 0.00);
 	glm::vec3 amount2= glm::vec3(0.02, 0, 0.02);
 
-	BSplineFlate BSS;
-	Mesh BSSMESH(BSS.getvert(), BSS.getindi());
 	
+	///////////////////// Terrain ////////////
+	Terrain terrain;
+	Mesh terrainMesh(terrain.getvert());
+	Object terrainObject(terrainMesh, glm::vec3(1.0), glm::vec3(1.0), shaderprogram);
 
 	///////////////////// Walls and floor /////////////
 
@@ -139,7 +142,7 @@ int main()
 	
 
 		//BSS.drawSurface(shaderprogram, BSS);
-		BSSMESH.Draw(shaderprogram);
+		//BSSMESH.Draw(shaderprogram);
 
 		shaderprogram.Activate();
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -160,14 +163,15 @@ int main()
 		camera.Inputs(window);
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderprogram, "camMatrix");
 
+		terrainObject.DrawArray(shaderprogram, isRunning);
 
 
-		/*cube1Object.Draw(shaderprogram, isRunning);
-		cube2Object.Draw(shaderprogram, isRunning);
-		cube3Object.Draw(shaderprogram, isRunning);
-		cube4Object.Draw(shaderprogram, isRunning);
-		cube5Object.Draw(shaderprogram, isRunning);
-		*/
+		//cube1Object.Draw(shaderprogram, isRunning);
+		//cube2Object.Draw(shaderprogram, isRunning);
+		//cube3Object.Draw(shaderprogram, isRunning);
+		//cube4Object.Draw(shaderprogram, isRunning);
+		//cube5Object.Draw(shaderprogram, isRunning);
+		//
 	
 		Collision collide;
 		
