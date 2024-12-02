@@ -28,6 +28,7 @@
 #include "Camera.h"
 #include "stb_image.h"
 
+#include "BarysentricCalc.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -35,6 +36,7 @@ void processInput(GLFWwindow* window);
 
 
 float speed = 0.5f;
+float speed2 = 100.f;
 bool isWireframe = true;
 bool isRunning = false;
 
@@ -84,7 +86,8 @@ int main()
 	glm::vec3 amount1 = glm::vec3(0.00, 0.0, 0.00);
 	glm::vec3 amount2= glm::vec3(0.02, 0, 0.02);
 
-	
+	BarysentricCalc bary;
+
 	///////////////////// Terrain ////////////
 	Terrain terrain;
 	//Mesh terrainMesh(terrain.getvert());
@@ -95,26 +98,14 @@ int main()
 
 	Shape cube(Shape::CUBE);
 
-	//Cube 1: The Floor 
+	//Cube 1
 	Mesh cube1Mesh(cube.getvert(), cube.getindi());
-	Object cube1Object(cube1Mesh, glm::vec3(0.0, -50, 0.0), glm::vec3(5, 0.1, 5), shaderprogram);
+	Object* cube1Object = new Object(cube1Mesh, glm::vec3(1.0, 0.0, 1.0), glm::vec3(5, 5, 5), shaderprogram);
 
-	//Cube 2: Wall along X-axis (right side)
+	//Cube 1
 	Mesh cube2Mesh(cube.getvert(), cube.getindi());
-	Object cube2Object(cube2Mesh, glm::vec3(50.0, 0, 0.0), glm::vec3(0.1, 5, 5), shaderprogram);
+	Object cube2Object(cube1Mesh, glm::vec3(9.0, 1.0, 1.0), glm::vec3(5, 5, 5), shaderprogram);
 
-	//Cube 3: Wall along X-axis (left side)
-	Mesh cube3Mesh(cube.getvert(), cube.getindi());
-	Object cube3Object(cube3Mesh, glm::vec3(-50.0, 0, 0.0), glm::vec3(0.1, 5, 5), shaderprogram);
-
-	//Cube 4: Wall along Z-axis (back side)
-	Mesh cube4Mesh(cube.getvert(), cube.getindi());
-	Object cube4Object(cube4Mesh, glm::vec3(0.0, 0, 50.0), glm::vec3(5, 5, 0.1), shaderprogram);
-
-	//Cube 5: Wall along Z-axis (front side)
-	Mesh cube5Mesh(cube.getvert(), cube.getindi());
-	Object cube5Object(cube5Mesh, glm::vec3(0.0, 0, -50.0), glm::vec3(5, 5, 0.1), shaderprogram);
-					
 	//////////////////// Balls //////////////////////
 
 	Shape Sphere(Shape::SUBDIVIDED_OCTAHEDRON);
@@ -133,6 +124,11 @@ int main()
 		}
 	}
 
+
+
+
+
+	//*********************************************************************************//
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
@@ -141,10 +137,6 @@ int main()
 		float deltaTime = currentFrame - lastframe;
 		lastframe = currentFrame;
 	
-
-		//BSS.drawSurface(shaderprogram, BSS);
-		//BSSMESH.Draw(shaderprogram);
-
 		shaderprogram.Activate();
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -159,21 +151,79 @@ int main()
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 
-
 		//Camera
 		camera.Inputs(window);
 		camera.Matrix(45.0f, 0.1f, 1000.0f, shaderprogram, "camMatrix");
 
+
+		for (int i = 0; i < terrain.triangles.size(); i++)
+		{
+			Vertex vp1 = terrain.triangles[i].v1;
+			Vertex vp2 = terrain.triangles[i].v2;
+			Vertex vp3 = terrain.triangles[i].v3;
+
+			glm::vec3 p1 = glm::vec3(vp1.pos.x, vp1.pos.y, vp1.pos.z);
+			glm::vec3 p2 = glm::vec3(vp2.pos.x, vp2.pos.y, vp2.pos.z);
+			glm::vec3 p3 = glm::vec3(vp3.pos.x, vp3.pos.y, vp3.pos.z);
+
+		
+
+
+			glm::vec3 barycentric = bary.calculateBarysentricCoordinates(p1, p2, p3, cube1Object->model[3]);
+
+			//std::cout << barycentric.x << " " << barycentric.y << " " << barycentric.z << std::endl;
+		
+			if (barycentric.x >= 0 && barycentric.y >= 0 && barycentric.z >= 0 && barycentric.x <= 1 && barycentric.y <= 1 &&  barycentric.z <= 1)
+			{
+				/*std::cout << barycentric.x << " " << barycentric.y << " " << barycentric.z << std::endl;
+				std::cout << "p1: " << p1.x << " " << p1.y << " " << p1.z << std::endl;
+				std::cout << "p2: " << p2.x << " " << p2.y << " " << p2.z << std::endl;
+				std::cout << "p3: " << p3.x << " " << p3.y << " " << p3.z << std::endl;*/
+
+				float u = barycentric.x;
+				float P = p1.y;
+				float v = barycentric.y;
+				float Q = p2.y;
+				float w = barycentric.z;
+				float R = p3.y;
+
+				//cube1Object->model[3].y = (u * P + v * Q + w * R) + 0.05/2;
+				//std::cout << "hi" << std::endl;
+
+				float newY = (u * P + v * Q + w * R) + 5 / 2;
+				cube1Object->currentPos.y = newY;
+
+			}
+		}
+
+
+		// Punktsky
 		//terrainObject.DrawArray(shaderprogram, isRunning);
+
+		//Triangel terrain
 		terrainObject.Draw(shaderprogram, isRunning);
 
-		cube1Object.Draw(shaderprogram, isRunning);
-		//cube2Object.Draw(shaderprogram, isRunning);
-		//cube3Object.Draw(shaderprogram, isRunning);
-		//cube4Object.Draw(shaderprogram, isRunning);
-		//cube5Object.Draw(shaderprogram, isRunning);
-		//
-	
+
+		// Cube movement based on key input
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+			cube1Object->currentPos.x += 10.f * deltaTime;
+		}
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+			cube1Object->currentPos.x -= 10.f * deltaTime;
+		}
+		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+			cube1Object->currentPos.z -= 10.f * deltaTime;
+		}
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+			cube1Object->currentPos.z += 10.f * deltaTime;
+		}
+
+		//Update cube's position matrix
+		cube1Object->Update(shaderprogram);
+
+		//Cubes
+		cube1Object->Draw(shaderprogram, isRunning);
+
 		Collision collide;
 		
 		//for (int i = 0; i < 16; i++) 

@@ -5,6 +5,7 @@
 #include <string>
 #include "Shaders/VBO.h"
 
+#include <random>
 
 #pragma once
 
@@ -19,6 +20,13 @@ public:
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
 	std::vector<double> points;
+
+	struct Triangle
+	{
+		Vertex v1, v2, v3;
+	};
+
+	std::vector<Triangle> triangles;
 
 	float xoffset, yoffset, zoffset;
 	int highest{ 0 };
@@ -73,20 +81,23 @@ public:
 			{
 				highest = y;
 			}
+
+			//vertex format:
 			/*glm::vec3 pos;
 			glm::vec3 normal;
 			glm::vec2 tex;
 			glm::vec3 col;*/
 
-		/*	glm::vec3 col(0.1 * y, 0.2 * y, 0.1 * y);
-			col = glm::normalize(col);*/
-			float normalizedHeight = y / 6936000.0f; // Normalize height (0 to 1)
+			//Random number to make terrain visable
+			std::random_device rd;
+			std::mt19937 generator(rd());
+			std::uniform_real_distribution<double> distribution(0.1, 0.3);
+			double random_number = distribution(generator);
+			double random_number2 = distribution(generator);
+			//double random_number3 = distribution(generator);
 
-			// Map the green channel to normalizedHeight
-			glm::vec3 col(0.1f, 0.1f + 0.9f * normalizedHeight, 0.1f); // Base green increases with height
-
+			glm::vec3 col(0.1f , 0.1f + random_number, 0.1f + random_number2);
 			col = glm::normalize(col);
-
 
 			vertices.emplace_back(Vertex{
 				glm::vec3(x - xoffset, z - zoffset, y - yoffset),

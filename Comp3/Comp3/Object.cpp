@@ -86,7 +86,7 @@ void Object::updateMovement()
 		this->velocity += glm::vec3(0, -0.004, 0);
 	}
 
-	this->prevPos = this->currentPos;
+	this->prevPos += this->currentPos;
 	move(this->velocity);
 }
 
@@ -95,7 +95,8 @@ void Object::Update(ShaderClass& shaderProgram)
 	this->mesh.VAO.Bind();
 	model = glm::mat4(1.f);
 	model = glm::scale(this->size);
-	model = glm::translate(model, currentPos);
+	//model = glm::translate(model, currentPos);
+	model = glm::translate(glm::mat4(1.f), currentPos);
 	//model = glm::rotate(model, glm::radians(this->degree), this->axis); //TODO FIX
 	shaderProgram.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.shaderID, "model"), 1, GL_FALSE, glm::value_ptr(model));

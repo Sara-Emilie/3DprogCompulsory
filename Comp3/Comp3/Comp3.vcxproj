@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BarysentricCalc.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="BSplineFlate.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -290,6 +291,7 @@
     <None Include="Dependencies\includes\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BarysentricCalc.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="BSplineFlate.h" />
     <ClInclude Include="Camera.h" />
