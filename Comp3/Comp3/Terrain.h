@@ -5,6 +5,7 @@
 #include <string>
 #include "Shaders/VBO.h"
 
+
 #pragma once
 
 using namespace std;
@@ -16,7 +17,11 @@ public:
 	Terrain();
 
 	std::vector<Vertex> vertices;
+	std::vector<GLuint> indices;
+	std::vector<double> points;
+
 	float xoffset, yoffset, zoffset;
+	int highest{ 0 };
 
 	void ReadFile(const std::string& path)
 	{
@@ -64,20 +69,42 @@ public:
 				continue;
 			}
 			
+			if (y > highest) 
+			{
+				highest = y;
+			}
+			/*glm::vec3 pos;
+			glm::vec3 normal;
+			glm::vec2 tex;
+			glm::vec3 col;*/
+
+		/*	glm::vec3 col(0.1 * y, 0.2 * y, 0.1 * y);
+			col = glm::normalize(col);*/
+			float normalizedHeight = y / 6936000.0f; // Normalize height (0 to 1)
+
+			// Map the green channel to normalizedHeight
+			glm::vec3 col(0.1f, 0.1f + 0.9f * normalizedHeight, 0.1f); // Base green increases with height
+
+			col = glm::normalize(col);
+
 
 			vertices.emplace_back(Vertex{
 				glm::vec3(x - xoffset, z - zoffset, y - yoffset),
 				glm::vec3(1.0),
 				glm::vec2(1.0),
-				glm::vec3(1.0)
+				col
 				})
 				;
 
 		}
 
+		std::cout << highest << std::endl;
 	}
 
+	void MakeTriangles(std::vector<Vertex> vertices);
+
 	std::vector<Vertex>& getvert();
+	std::vector<GLuint>& getindi();
 
 };
 

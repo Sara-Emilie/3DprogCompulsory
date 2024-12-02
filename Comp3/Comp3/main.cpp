@@ -87,7 +87,8 @@ int main()
 	
 	///////////////////// Terrain ////////////
 	Terrain terrain;
-	Mesh terrainMesh(terrain.getvert());
+	//Mesh terrainMesh(terrain.getvert());
+	Mesh terrainMesh(terrain.getvert(), terrain.getindi());
 	Object terrainObject(terrainMesh, glm::vec3(1.0), glm::vec3(1.0), shaderprogram);
 
 	///////////////////// Walls and floor /////////////
@@ -163,10 +164,10 @@ int main()
 		camera.Inputs(window);
 		camera.Matrix(45.0f, 0.1f, 1000.0f, shaderprogram, "camMatrix");
 
-		terrainObject.DrawArray(shaderprogram, isRunning);
+		//terrainObject.DrawArray(shaderprogram, isRunning);
+		terrainObject.Draw(shaderprogram, isRunning);
 
-
-		//cube1Object.Draw(shaderprogram, isRunning);
+		cube1Object.Draw(shaderprogram, isRunning);
 		//cube2Object.Draw(shaderprogram, isRunning);
 		//cube3Object.Draw(shaderprogram, isRunning);
 		//cube4Object.Draw(shaderprogram, isRunning);

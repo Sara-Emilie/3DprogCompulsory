@@ -601,6 +601,7 @@
     <ClInclude Include="Dependencies\Eigen\src\SVD\SVDBase.h" />
     <ClInclude Include="Dependencies\Eigen\src\SVD\UpperBidiagonalization.h" />
     <ClInclude Include="Dependencies\Eigen\src\UmfPackSupport\UmfPackSupport.h" />
+    <ClInclude Include="Dependencies\includes\delaunator.hpp" />
     <ClInclude Include="Dependencies\includes\glad\glad.h" />
     <ClInclude Include="Dependencies\includes\GLFW\glfw3.h" />
     <ClInclude Include="Dependencies\includes\GLFW\glfw3native.h" />
