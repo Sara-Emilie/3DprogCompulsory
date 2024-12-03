@@ -101,9 +101,9 @@ int main()
 
 	vector< Object*> Spheres;
 
-	for (int i = 0; i < 9; i++) 
+	for (int i = 1; i < 10; i++) 
 	{
-		Spheres.push_back(new Object(SphereMesh, glm::vec3(100.0 + i * 3, 1.0, 10.0), glm::vec3(5, 5, 5), shaderprogram, glm::vec3(0,0,0), 1));
+		Spheres.push_back(new Object(SphereMesh, glm::vec3(100.0 + i * 4, 1.0, 10.0 + i), glm::vec3(6.f), shaderprogram, glm::vec3(0,0,0), 1));
 	}
 	
 
@@ -168,7 +168,7 @@ int main()
 					float w = barycentric.z;
 					float R = p3.y;
 
-					float newY = (u * P + v * Q + w * R) + 5 / 2;
+					float newY = (u * P + v * Q + w * R) + 6 / 2;
 					balls->currentPos.y = newY;
 
 					float g = 9.81;
@@ -188,6 +188,10 @@ int main()
 				}
 			}
 		}
+
+		Collision collide;
+
+
 
 
 		// Punktsky
@@ -220,9 +224,42 @@ int main()
 		//Cubes
 		//Spheres[0]->Draw(shaderprogram, isRunning);
 		
-		for (Object* balls : Spheres) 
+	/*	for (Object* balls : Spheres) 
 		{
 			balls->Draw(shaderprogram, isRunning);
+		}*/
+
+
+		// Kollisjon fungerer men uten friksjon eller luftmotstand vil velocity bli alt før høg over tid
+		for (int i = 0; i < Spheres.size(); i++)
+		{
+			Object* balls = Spheres[i];
+			balls->Draw(shaderprogram, isRunning);
+
+
+			// Collide with other balls
+			for (int j = i + 1; j < Spheres.size(); j++)
+			{
+				Object* otherBall = Spheres[j];
+
+				collide.CollideWithBall(
+					balls->AABB.Extent,
+					balls->AABB.Position,
+					otherBall->AABB.Extent,
+					otherBall->AABB.Position,
+					balls->velocity,
+					balls->radius
+				);
+
+				collide.CollideWithBall(
+					otherBall->AABB.Extent,
+					otherBall->AABB.Position,
+					balls->AABB.Extent,
+					balls->AABB.Position,
+					otherBall->velocity,
+					otherBall->radius
+				);
+			}
 		}
 
 		processInput(window);

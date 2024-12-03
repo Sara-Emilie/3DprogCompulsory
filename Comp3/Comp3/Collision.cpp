@@ -17,13 +17,14 @@ void Collision::CollideWithBall(glm::vec3 Extentball, glm::vec3 Positionball, gl
     glm::vec3 closestpoint = glm::clamp(spheremin, min, max);
     float diameter = glm::distance(spheremin, spheremax);
     glm::vec3 distance = spheremin - spheremax;
-    if (diameter <= radius * 2 && diameter > 0) 
+    if (diameter <= radius * 2  && diameter > 0) 
     {
-       v = glm::reflect(v, normalize(distance));
+       //v = glm::reflect(v, normalize(distance));
 
        std::cout << "hit " << std::endl;
        std::cout << distance.x << distance.y << distance.z << std::endl;
     }
+
 
 }
 

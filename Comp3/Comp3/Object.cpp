@@ -18,7 +18,7 @@ Object::Object(Mesh& mesh, glm::vec3 startPos, glm::vec3 size, ShaderClass& shad
 
 	this->mesh.VAO.Bind();
 	this->hasGravity = true;
-
+	
 	this->mass = mass;
 	this->radius = size.x / 2;
 
