@@ -22,9 +22,10 @@ public:
 	bool hasGravity;
 	float mass;
 
+
 	Object();
 	Object(Mesh& mesh, glm::vec3 startPos, glm::vec3 size, ShaderClass& shaderProgram);
-	Object(Mesh& mesh, glm::vec3 startPos, glm::vec3 size, ShaderClass& shaderProgram, glm::vec3 speed, bool hasGravity, float mass);
+	Object(Mesh& mesh, glm::vec3 startPos, glm::vec3 size, ShaderClass& shaderProgram, glm::vec3 speed, float mass);
 
 	void setPos(glm::vec3 newPos);
 	void scale(glm::vec3 size);

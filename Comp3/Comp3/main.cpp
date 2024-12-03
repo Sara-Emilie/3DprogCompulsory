@@ -103,7 +103,7 @@ int main()
 
 	for (int i = 0; i < 9; i++) 
 	{
-		Spheres.push_back(new Object(SphereMesh, glm::vec3(100.0 + i * 3, 1.0, 10.0), glm::vec3(5, 5, 5), shaderprogram));
+		Spheres.push_back(new Object(SphereMesh, glm::vec3(100.0 + i * 3, 1.0, 10.0), glm::vec3(5, 5, 5), shaderprogram, glm::vec3(0,0,0), 1));
 	}
 	
 
@@ -146,8 +146,17 @@ int main()
 			glm::vec3 p3 = glm::vec3(vp3.pos.x, vp3.pos.y, vp3.pos.z);
 
 		
+				//calc normal
+			
+			glm::vec3 u = vp2.pos - vp1.pos;
+			glm::vec3 v = vp3.pos - vp1.pos;
+
+			glm::vec3 normal = glm::normalize(glm::cross(u, v));
+
+				
 			for (Object* balls : Spheres)
 			{
+
 				glm::vec3 barycentric = bary.calculateBarysentricCoordinates(p1, p2, p3, balls->model[3]);
 
 				if (barycentric.x >= 0 && barycentric.y >= 0 && barycentric.z >= 0 && barycentric.x <= 1 && barycentric.y <= 1 && barycentric.z <= 1)
@@ -161,6 +170,12 @@ int main()
 
 					float newY = (u * P + v * Q + w * R) + 5 / 2;
 					balls->currentPos.y = newY;
+
+					float g = 9.81;
+					glm::vec3 a = glm::vec3(g * normal.x * normal.y, g * normal.y * normal.y - 1, g * normal.z * normal.y);
+					glm::vec3 newVelocity = glm::vec3(balls->velocity + glm::vec3(a.x / 2 * deltaTime * deltaTime, a.y / 2 * deltaTime * deltaTime, a.z / 2 * deltaTime * deltaTime));
+					balls->velocity = newVelocity;
+					balls->currentPos = glm::vec3(balls->currentPos + newVelocity);
 
 				}
 			}
