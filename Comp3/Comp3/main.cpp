@@ -177,6 +177,14 @@ int main()
 					balls->velocity = newVelocity;
 					balls->currentPos = glm::vec3(balls->currentPos + newVelocity);
 
+					////rotate
+					balls->degree += glm::length(balls->velocity) / deltaTime * deltaTime;
+					
+					if (newVelocity.y != 0) 
+					{
+						balls->axis = glm::cross(normal, balls->velocity);
+						balls->axis = glm::normalize(balls->axis);
+					}
 				}
 			}
 		}
@@ -208,11 +216,9 @@ int main()
 			Spheres[0]->currentPos = camera.Position;
 		}
 
-		//Update cube's position matrix
-		Spheres[0]->Update(shaderprogram);
 
 		//Cubes
-		Spheres[0]->Draw(shaderprogram, isRunning);
+		//Spheres[0]->Draw(shaderprogram, isRunning);
 		
 		for (Object* balls : Spheres) 
 		{

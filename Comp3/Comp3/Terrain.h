@@ -78,7 +78,7 @@ public:
 				continue;
 			}
 
-			if (skip == 10000) 
+			if (skip == 3000)
 			{
 				//vertex format:
 				/*glm::vec3 pos;

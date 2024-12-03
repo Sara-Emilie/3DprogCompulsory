@@ -92,7 +92,12 @@ void Object::Update(ShaderClass& shaderProgram)
 	model = glm::scale(this->size);
 	//model = glm::translate(model, currentPos);
 	model = glm::translate(glm::mat4(1.f), currentPos);
-	//model = glm::rotate(model, glm::radians(this->degree), this->axis); //TODO FIX
+
+	if (hasGravity)
+	{
+		model = glm::rotate(model, glm::radians(this->degree), this->axis);
+	}
+
 	shaderProgram.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.shaderID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
