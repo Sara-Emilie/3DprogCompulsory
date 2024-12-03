@@ -94,41 +94,20 @@ int main()
 	Mesh terrainMesh(terrain.getvert(), terrain.getindi());
 	Object terrainObject(terrainMesh, glm::vec3(1.0), glm::vec3(1.0), shaderprogram);
 
-	///////////////////// Walls and floor /////////////
-
-	Shape cube(Shape::CUBE);
-
-	//Cube 1
-	Mesh cube1Mesh(cube.getvert(), cube.getindi());
-	Object* cube1Object = new Object(cube1Mesh, glm::vec3(1.0, 0.0, 1.0), glm::vec3(5, 5, 5), shaderprogram);
-
-	//Cube 1
-	Mesh cube2Mesh(cube.getvert(), cube.getindi());
-	Object cube2Object(cube1Mesh, glm::vec3(9.0, 1.0, 1.0), glm::vec3(5, 5, 5), shaderprogram);
-
-	//////////////////// Balls //////////////////////
+	///////////////////// Spheres /////////////
 
 	Shape Sphere(Shape::SUBDIVIDED_OCTAHEDRON);
-	Mesh BallMesh(Sphere.getvert(), Sphere.getindi());
-	int index = 0;
-	float size = 0.1;
+	Mesh SphereMesh(Sphere.getvert(), Sphere.getindi());
 
-	Object* Ball[16] = {};
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			Ball[index] = new Object(BallMesh, glm::vec3((float)i * 10, 0.5, (float)j *10), glm::vec3(size, size, size), shaderprogram, glm::vec3(0, 0.0, 0.0), true, i * 0.2f);
-			Ball[index]->velocity.z = 0.05 * (rand() * 0.0005);
-			Ball[index]->velocity.x = 0.03 * (rand() * 0.0005);
-			Ball[index]->velocity.y = 0.04;
-			index++;
-		}
+	vector< Object*> Spheres;
+
+	for (int i = 0; i < 9; i++) 
+	{
+		Spheres.push_back(new Object(SphereMesh, glm::vec3(100.0 + i * 3, 1.0, 10.0), glm::vec3(5, 5, 5), shaderprogram));
 	}
+	
 
-
-
-
-
-	//*********************************************************************************//
+	//**********************************      While-loop           ***********************************************//
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
@@ -155,7 +134,7 @@ int main()
 		camera.Inputs(window);
 		camera.Matrix(45.0f, 0.1f, 1000.0f, shaderprogram, "camMatrix");
 
-
+		
 		for (int i = 0; i < terrain.triangles.size(); i++)
 		{
 			Vertex vp1 = terrain.triangles[i].v1;
@@ -167,32 +146,23 @@ int main()
 			glm::vec3 p3 = glm::vec3(vp3.pos.x, vp3.pos.y, vp3.pos.z);
 
 		
-
-
-			glm::vec3 barycentric = bary.calculateBarysentricCoordinates(p1, p2, p3, cube1Object->model[3]);
-
-			//std::cout << barycentric.x << " " << barycentric.y << " " << barycentric.z << std::endl;
-		
-			if (barycentric.x >= 0 && barycentric.y >= 0 && barycentric.z >= 0 && barycentric.x <= 1 && barycentric.y <= 1 &&  barycentric.z <= 1)
+			for (Object* balls : Spheres)
 			{
-				/*std::cout << barycentric.x << " " << barycentric.y << " " << barycentric.z << std::endl;
-				std::cout << "p1: " << p1.x << " " << p1.y << " " << p1.z << std::endl;
-				std::cout << "p2: " << p2.x << " " << p2.y << " " << p2.z << std::endl;
-				std::cout << "p3: " << p3.x << " " << p3.y << " " << p3.z << std::endl;*/
+				glm::vec3 barycentric = bary.calculateBarysentricCoordinates(p1, p2, p3, balls->model[3]);
 
-				float u = barycentric.x;
-				float P = p1.y;
-				float v = barycentric.y;
-				float Q = p2.y;
-				float w = barycentric.z;
-				float R = p3.y;
+				if (barycentric.x >= 0 && barycentric.y >= 0 && barycentric.z >= 0 && barycentric.x <= 1 && barycentric.y <= 1 && barycentric.z <= 1)
+				{
+					float u = barycentric.x;
+					float P = p1.y;
+					float v = barycentric.y;
+					float Q = p2.y;
+					float w = barycentric.z;
+					float R = p3.y;
 
-				//cube1Object->model[3].y = (u * P + v * Q + w * R) + 0.05/2;
-				//std::cout << "hi" << std::endl;
+					float newY = (u * P + v * Q + w * R) + 5 / 2;
+					balls->currentPos.y = newY;
 
-				float newY = (u * P + v * Q + w * R) + 5 / 2;
-				cube1Object->currentPos.y = newY;
-
+				}
 			}
 		}
 
@@ -206,63 +176,34 @@ int main()
 
 		// Cube movement based on key input
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-			cube1Object->currentPos.x += 10.f * deltaTime;
+			Spheres[0]->currentPos.x += 10.f * deltaTime;
 		}
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-			cube1Object->currentPos.x -= 10.f * deltaTime;
+			Spheres[0]->currentPos.x -= 10.f * deltaTime;
 		}
 		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-			cube1Object->currentPos.z -= 10.f * deltaTime;
+			Spheres[0]->currentPos.z -= 10.f * deltaTime;
 		}
 		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-			cube1Object->currentPos.z += 10.f * deltaTime;
+			Spheres[0]->currentPos.z += 10.f * deltaTime;
+		}
+
+		//Interaktivitet
+		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
+			Spheres[0]->currentPos = camera.Position;
 		}
 
 		//Update cube's position matrix
-		cube1Object->Update(shaderprogram);
+		Spheres[0]->Update(shaderprogram);
 
 		//Cubes
-		cube1Object->Draw(shaderprogram, isRunning);
-
-		Collision collide;
+		Spheres[0]->Draw(shaderprogram, isRunning);
 		
-		//for (int i = 0; i < 16; i++) 
-		//{
-		//	Ball[i]->Draw(shaderprogram, isRunning);
-		//
-		//	//Collide with walls
-		//	collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube1Object.AABB.Extent, cube1Object.AABB.Position,Ball[i]->velocity);
-		//	collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube2Object.AABB.Extent, cube2Object.AABB.Position, Ball[i]->velocity);
-		//	collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube3Object.AABB.Extent, cube3Object.AABB.Position, Ball[i]->velocity);
-		//	collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube4Object.AABB.Extent, cube4Object.AABB.Position, Ball[i]->velocity);
-		//	collide.CollideWithWall(Ball[i]->AABB.Extent, Ball[i]->AABB.Position, cube5Object.AABB.Extent, cube5Object.AABB.Position, Ball[i]->velocity);
-		//	
-		//	//Collide with other balls
-		//	for (int j = i + 1; j < 16; j++) 
-		//	{
-		//		collide.CollideWithBall(
-		//			Ball[i]->AABB.Extent,
-		//			Ball[i]->AABB.Position,
-		//			Ball[j]->AABB.Extent,
-		//			Ball[j]->AABB.Position,
-		//			Ball[i]->velocity,
-		//			Ball[i]->radius
-		//		);
+		for (Object* balls : Spheres) 
+		{
+			balls->Draw(shaderprogram, isRunning);
+		}
 
-		//	
-		//		collide.CollideWithBall(
-		//			Ball[j]->AABB.Extent,
-		//			Ball[j]->AABB.Position,
-		//			Ball[i]->AABB.Extent,
-		//			Ball[i]->AABB.Position,
-		//			Ball[j]->velocity,
-		//			Ball[j]->radius
-		//		);
-		//	}
-
-		//}
-		
-		
 		processInput(window);
 				
 		glfwPollEvents();

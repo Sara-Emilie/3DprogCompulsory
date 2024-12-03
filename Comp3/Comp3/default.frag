@@ -1,71 +1,44 @@
 #version 330 core
+
 out vec4 FragColor;
-  
-//in vec2 TexCoord;
-// in varyings
+
+// Inputs from the vertex shader
 in vec3 Normal;
 in vec3 FragPos;
-in vec2 TexCoords;
 in vec3 Color;
 
-// uniforms
-uniform sampler2D ourTexture;
-uniform sampler2D specularTexture;
-
-uniform vec3 viewPos;
-
-struct DirectionalLight
-{
-    vec3 direction;
-    vec3 color;
-    vec3 ambient;
-};
-
-struct Material
-{
-    vec3 diffuse;
-    vec3 specular;
-    float shininess;
-};
+// Uniforms
+uniform vec3 viewPos;  // Camera position
 
 void main()
 {
 
+    vec3 Up = vec3(0.0, 1.0, 0.0);
 
-    DirectionalLight dl;
-    dl.direction = vec3(0, -1, 0);
-    dl.color = vec3(0.9, 1, 0.7);
-    dl.ambient = vec3(0.2);
+    // Normalize the normal
+    vec3 norm = normalize(Normal);
 
-    Material mat;
-    mat.diffuse = vec3(texture(ourTexture, TexCoords));
-    mat.specular = vec3(texture(specularTexture, TexCoords));
-    mat.shininess = 64;
+    // Define constants for the light properties
+    vec3 lightPos = viewPos;  // Light position same as view position
+    vec3 lightColor = vec3(1.0, 1.0, 1.0);  // White light
+    vec3 ambientColor = vec3(1.0, 1.0, 1.0);  // White ambient light
+    float shininess = 100.0;  // Hardcoded shininess
 
-    // diffuse angle
-    float NdL = max(dot(Normal, -dl.direction), 0);
+    // Ambient lighting
+    vec3 ambient = ambientColor * Color;
 
-    // variables to calculate specular lighting
+    // Diffuse lighting
+    vec3 lightDir = normalize(lightPos - FragPos);
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = diff * lightColor * Color;
+
+    // Specular lighting
     vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 reflectDir = reflect(dl.direction, Normal);
-    float VdR = pow(max(dot(viewDir, reflectDir), 0), mat.shininess); 
+    vec3 reflectDir = reflect(-lightDir, norm);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
+    vec3 specular = spec * lightColor;
 
-    // specular light
-    vec3 specularContribution = VdR * mat.specular * dl.color;
-
-    // diffuse light
-    vec3 diffuseContribution = NdL * mat.diffuse * dl.color;
-
-    // ambient light
-    vec3 ambientContribution = dl.ambient * mat.diffuse;
-
-    // final color
-    vec3 finalColor = ambientContribution + diffuseContribution + specularContribution;
-
-    //FragColor = vec4(finalColor, 1);//texture(ourTexture, TexCoord);  
-    // FragColor = vec4(1.0,1.0,1.0, 1);
-    FragColor = vec4(Color,1);
+    // Final color
+    vec3 result = ambient + diffuse + specular;
+    FragColor = vec4(result, 1.0);
 }
-
-
-//Used code we did in class with Ali (for .vert and .frag as well as cube), so it is very similar to https://github.com/AA-A93/3Dprog24-lighting-class.git

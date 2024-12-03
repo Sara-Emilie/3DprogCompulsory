@@ -4,7 +4,7 @@
 Terrain::Terrain()
 {
 	//ReadFile("HøydeData/Fil.txt");
-	ReadFile("HøydeData/Fil4.txt");
+	ReadFile("HøydeData/Fil3.txt");
 	MakeTriangles(this->vertices);
 	
 }
@@ -26,6 +26,8 @@ void Terrain::MakeTriangles(std::vector<Vertex> vertices)
 		indices.push_back(d.triangles[i+1]);
 		indices.push_back(d.triangles[i+2]);
 
+
+		//Use for barysentric //
 		size_t i1 = d.triangles[i];
 		size_t i2 = d.triangles[i + 1];
 		size_t i3 = d.triangles[i + 2];
@@ -35,8 +37,14 @@ void Terrain::MakeTriangles(std::vector<Vertex> vertices)
 		Vertex v2 = vertices[i2];
 		Vertex v3 = vertices[i3];
 
+		//calc normal
+		glm::vec3 u = v2.pos - v1.pos;
+		glm::vec3 v = v3.pos - v1.pos;
+
+		glm::vec3 normal = glm::normalize(glm::cross(u, v));
+
 		// Create a Triangle struct and add it to the triangles vector
-		Triangle t1 = { v1, v2, v3 };
+		Triangle t1 = { v1, v2, v3 , normal };
 		triangles.push_back(t1);
 
 
