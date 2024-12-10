@@ -25,6 +25,8 @@
 #include "Camera.h"
 #include "stb_image.h"
 
+#include "Particles/Emitter.h"
+#include <random>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -38,7 +40,6 @@ bool isRunning = false;
 // Window dimensions
 const unsigned int width = 1200;
 const unsigned int height = 800;
-
 
 
 int main()
@@ -81,6 +82,7 @@ int main()
 	glm::vec3 amount1 = glm::vec3(0.00, 0.0, 0.00);
 	glm::vec3 amount2= glm::vec3(0.02, 0, 0.02);
 
+
 	///////////////////// Walls and floor /////////////
 
 	Shape cube(Shape::CUBE);
@@ -122,6 +124,10 @@ int main()
 			index++;
 		}
 	}
+
+
+	///////////// Particles/////////////////////
+	Emitter particleEmitter;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -199,6 +205,31 @@ int main()
 
 		}
 		
+		particleEmitter.UpdateParticles(deltaTime);
+		particleEmitter.DrawParticles(shaderprogram, camera);
+
+
+		if (particleEmitter.Alive < particleEmitter.Max)
+		{
+				
+				double lower = -15;
+				double upper = 15;
+				std::random_device rd;
+				std::mt19937 gen(rd());
+				std::uniform_real_distribution<> dis(lower, upper);
+				std::vector<double> random_numbers;
+
+				for (int i = 0; i < 3; ++i) 
+				{
+					random_numbers.push_back(dis(gen));
+				}
+
+				
+
+			particleEmitter.CreateParticles(BallMesh, glm::vec3(5, 5, 400), glm::vec3(1 + random_numbers[1], 1 + random_numbers[2], 1 + random_numbers[0]));
+		}
+
+
 		
 		processInput(window);
 				

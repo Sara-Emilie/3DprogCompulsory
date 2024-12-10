@@ -112,5 +112,6 @@ void Object::Draw(ShaderClass& shaderProgram, bool isRunning)
 	}
 	
 	Update(shaderProgram);
+
 	this->mesh.Draw(shaderProgram);
 }
