@@ -11,27 +11,38 @@ struct Entity
 
 class MovementSystem
 {
-
-   /* ComponentManager<PositionComponent>* posComp;
+    private:
+    ComponentManager<PositionComponent>* posComp;
     ComponentManager<VelocityComponent>* velComp;
 
-    MovementSystem(ComponentManager<PositionComponent>* positions, ComponentManager<VelocityComponent>* velocities)
+public:
+    MovementSystem(ComponentManager<PositionComponent>* positions, ComponentManager<VelocityComponent>* velocity)
     {
         this->posComp = positions;
-        this->velComp = velocities;
+        this->velComp = velocity;
+    }
 
-        if()
-
-    }*/
-   /* void Move(PositionComponent & positions, VelocityComponent & velocities)
+    void Move(std::vector<Entity> entity, float deltaTime) 
     {
-        if com
-            positions.x[i] += velocities.vx[i];
-            positions.y[i] += velocities.vy[i] ;
-            positions.z[i] += velocities.vz[i] ;
-        
-    }*/
+        for (Entity enti : entity)
+        {
+           
+            if (posComp->HasComponent(enti.ID) && velComp->HasComponent(enti.ID))
+            {
+               
+                PositionComponent pos = posComp->GetComponent(enti.ID);
+                VelocityComponent vel = velComp->GetComponent(enti.ID);
 
+              
+                pos.x[enti.ID] += vel.vx[enti.ID] * deltaTime;
+                pos.y[enti.ID] += vel.vy[enti.ID] * deltaTime;
+                pos.z[enti.ID] += vel.vz[enti.ID] * deltaTime;
+
+                posComp->AddComponent(enti.ID, pos);
+                velComp->AddComponent(enti.ID, vel);
+            }
+        }
+    }
 };
 
 

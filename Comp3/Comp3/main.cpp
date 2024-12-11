@@ -115,9 +115,9 @@ int main()
 		};
 		VelocityComponent velComp
 		{
-			{0.1f * i}, // vx
-			{0.05f * i}, // vy
-			{0.02f * i}  // vz
+			{0.1f * i, 0}, // vx
+			{0.05f * i, -1 }, // vy
+			{0.02f * i, 0 }  // vz
 		};
 
 		RadiusComponent radiusComp{ {1.0f} }; // radius
@@ -128,8 +128,8 @@ int main()
 		meshManager->AddComponent(entity.ID, meshComp);
 	}
 
-	/*MovementSystem movementSystem(positionManager, velocityManager);
-	CollisionSystem collisionSystem(positionManager, velocityManager, radiusManager);*/
+	MovementSystem movementSystem(positionManager, velocityManager);
+	//CollisionSystem collisionSystem(positionManager, velocityManager, radiusManager);
 	RenderingSystem renderingSystem(positionManager, meshManager);
 
 
@@ -165,6 +165,7 @@ int main()
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderprogram, "camMatrix");
 
 		renderingSystem.Render(entities, shaderprogram);
+		movementSystem.Move(entities, deltaTime);
 
 		//Particles
 		particleEmitter.UpdateParticles(deltaTime);
