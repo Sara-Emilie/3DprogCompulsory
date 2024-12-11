@@ -140,7 +140,7 @@ int main()
 
 
 		shaderprogram.Activate();
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+		glClearColor(0.7f, 0.7f, 0.97f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//wireframe
@@ -225,8 +225,8 @@ int main()
 				}
 
 				
-
-			particleEmitter.CreateParticles(BallMesh, glm::vec3(5, 5, 400), glm::vec3(1 + random_numbers[1], 1 + random_numbers[2], 1 + random_numbers[0]));
+				particleEmitter.CreateParticles(BallMesh, glm::vec3(5 + random_numbers[1] * 10, 5 + random_numbers[0] * 10, 1000), glm::vec3(1 + random_numbers[1], 1 + random_numbers[2], -100));
+			particleEmitter.CreateParticles(BallMesh, glm::vec3(5 + random_numbers[0] * 10, 5 + random_numbers[1] * 10, 1000), glm::vec3(1 + random_numbers[1], 1 + random_numbers[2], -100));
 		}
 
 

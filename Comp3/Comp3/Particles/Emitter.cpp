@@ -12,7 +12,7 @@ void Emitter::CreateParticles(Mesh& mesh, glm::vec3 pos, glm::vec3 v)
 		VZ[Alive] = v.z;
 		VY[Alive] = v.y;
 
-		LifeTime[Alive] = 100;
+		LifeTime[Alive] = 10;
 		meshes[Alive] = mesh;
 
 		Alive++;
