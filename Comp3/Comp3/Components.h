@@ -16,10 +16,6 @@ struct VelocityComponent {
     float vz[2];
 };
 
-struct CollisionComponent {
-    std::vector<bool> isColliding;
-};
-
 struct RadiusComponent 
 {
     std::vector<float> radii; 

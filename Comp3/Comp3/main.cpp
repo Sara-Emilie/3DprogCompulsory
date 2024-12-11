@@ -82,7 +82,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	float lastframe = glfwGetTime();
 
-	//	// -- //
+	//	// - ECS - //
 
 	Shape Sphere(Shape::SUBDIVIDED_OCTAHEDRON);
 	Mesh BallMesh(Sphere.getvert(), Sphere.getindi());
@@ -167,6 +167,7 @@ int main()
 		renderingSystem.Render(entities, shaderprogram);
 		movementSystem.Move(entities, deltaTime);
 		collisionSystem.CollideWithBall(entities);
+
 		//Particles
 		particleEmitter.UpdateParticles(deltaTime);
 		particleEmitter.DrawParticles(shaderprogram, camera);
@@ -205,6 +206,7 @@ int main()
 	delete positionManager;
 	delete velocityManager;
 	delete radiusManager;
+	delete meshManager;
 
 
 	shaderprogram.Delete();
@@ -214,8 +216,8 @@ int main()
 	return 0;
 }
 
- //-- //
-
+ //- Non ECS - //
+//
 //	glm::vec3 amount1 = glm::vec3(0.00, 0.0, 0.00);
 //	glm::vec3 amount2= glm::vec3(0.02, 0, 0.02);
 //
