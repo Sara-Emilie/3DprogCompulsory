@@ -85,45 +85,83 @@ public:
 
 class CollisionSystem 
 {
-//    ComponentManager<PositionComponent>* posComp;
-//    ComponentManager<VelocityComponent>* velComp;
-//    ComponentManager<RadiusComponent>* radiusComp;
-//
-//public:
-//    CollisionSystem(ComponentManager<PositionComponent>* positions,
-//        ComponentManager<VelocityComponent>* velocities,
-//        ComponentManager<RadiusComponent>* radii)
-//        : posComp(positions), velComp(velocities), radiusComp(radii) {}
-//
-//
-//    void CollideWithBall(PositionComponent& positions, VelocityComponent& velocities, RadiusComponent& radii, size_t entity1, size_t entity2)
-//    {
-//        glm::vec3 Positionball(positions.x[entity1], positions.y[entity1], positions.z[entity1]);
-//        glm::vec3 Positionotherball(positions.x[entity2], positions.y[entity2], positions.z[entity2]);
-//
-//        glm::vec3 Extentball(radii.radii[entity1], radii.radii[entity1], radii.radii[entity1]);
-//        glm::vec3 Extentotherball(radii.radii[entity2], radii.radii[entity2], radii.radii[entity2]);
-//
-//        glm::vec3 velocity = glm::vec3(velocities.vx[entity1], velocities.vy[entity1], velocities.vz[entity1]);
-//
-//        glm::vec3 min = Positionotherball - Extentotherball;
-//        glm::vec3 max = Positionotherball + Extentotherball;
-//        glm::vec3 spheremin = Positionball;
-//        glm::vec3 spheremax = Positionotherball;
-//
-//        // Find the closest point to the other object
-//        glm::vec3 closestpoint = glm::clamp(spheremin, min, max);
-//
-//        float diameter = glm::distance(spheremin, spheremax);
-//        glm::vec3 distance = spheremin - spheremax;
-//
-//        if (diameter <= (Extentball.x + Extentotherball.x) && diameter > 0) {
-//            // Reflect velocity
-//            velocity = glm::reflect(velocity, glm::normalize(distance));
-//            velocities.vx[entity1] = velocity.x;
-//            velocities.vy[entity1] = velocity.y;
-//            velocities.vz[entity1] = velocity.z;
-//        }
-//    }
+    ComponentManager<PositionComponent>* posComp;
+    ComponentManager<VelocityComponent>* velComp;
+    ComponentManager<RadiusComponent>* radComp;
+
+public:
+    CollisionSystem(ComponentManager<PositionComponent>* positions,ComponentManager<VelocityComponent>* velocities, ComponentManager<RadiusComponent>* radii)
+        : posComp(positions), velComp(velocities), radComp(radii) {}
+
+
+    void CollideWithBall(std::vector<Entity> entities)
+    {
+        for (size_t i = 0; i < entities.size(); ++i)
+        {
+            for (size_t j = i + 1; j < entities.size(); ++j)
+            {
+                Entity entity1 = entities[i];
+                Entity entity2 = entities[j];
+
+                // Check if both entities have the required components
+                if (posComp->HasComponent(entity1.ID) && velComp->HasComponent(entity1.ID) && radComp->HasComponent(entity1.ID) &&
+                    posComp->HasComponent(entity2.ID) && velComp->HasComponent(entity2.ID) && radComp->HasComponent(entity2.ID))
+                {
+                    // Get the position, radius, and velocity components for both entities
+                    PositionComponent pos1 = posComp->GetComponent(entity1.ID);
+                    PositionComponent pos2 = posComp->GetComponent(entity2.ID);
+
+                    VelocityComponent vel1 = velComp->GetComponent(entity1.ID);
+                    VelocityComponent vel2 = velComp->GetComponent(entity2.ID);
+
+                    RadiusComponent rad1 = radComp->GetComponent(entity1.ID);
+                    RadiusComponent rad2 = radComp->GetComponent(entity2.ID);
+
+                    // Convert positions to glm::vec3
+                    glm::vec3 pos1Vec(pos1.x[entity1.ID], pos1.y[entity1.ID], pos1.z[entity1.ID]);
+                    glm::vec3 pos2Vec(pos2.x[entity2.ID], pos2.y[entity2.ID], pos2.z[entity2.ID]);
+
+                    // Calculate the distance between the centers of the two entities
+                    float distance = glm::distance(pos1Vec, pos2Vec);
+
+                  
+                    if (distance < (1 + 1)) //TODO FIX (hardcoded radius for now)
+                    {
+                        std::cout << "hit" << std::endl;
+                        // Create glm::vec3 velocity vectors from the individual components for each entity
+                        glm::vec3 vel1Vec(vel1.vx[entity1.ID], vel1.vy[entity1.ID], vel1.vz[entity1.ID]);
+                        glm::vec3 vel2Vec(vel2.vx[entity2.ID], vel2.vy[entity2.ID], vel2.vz[entity2.ID]);
+
+                        //Calculate the relative velocity vector between the two entities
+                        glm::vec3 relativeVelocity = vel1Vec - vel2Vec;
+
+                        // Reflect the velocities of the two entities
+                        glm::vec3 normal = glm::normalize(pos2Vec - pos1Vec); // Normal of collision surface
+
+                        //elastic collision
+                        float velocity1Dot = glm::dot(relativeVelocity, normal);
+                        float velocity2Dot = glm::dot(relativeVelocity, normal);
+
+                        glm::vec3 velocity1 = vel1Vec - (2.0f * velocity1Dot * normal);
+                        glm::vec3 velocity2 = vel2Vec - (2.0f * velocity2Dot * normal);
+
+                        //Update the velocities for the entities
+                        vel1.vx[entity1.ID] = velocity1.x;
+                        vel1.vy[entity1.ID] = velocity1.y;
+                        vel1.vz[entity1.ID] = velocity1.z;
+
+                        vel2.vx[entity2.ID] = -velocity2.x;
+                        vel2.vy[entity2.ID] = -velocity2.y;
+                        vel2.vz[entity2.ID] = -velocity2.z;
+
+            
+                        velComp->AddComponent(entity1.ID, vel1);
+                        velComp->AddComponent(entity2.ID, vel2);
+
+                    }
+                }
+            }
+        }
+    }
 
 };

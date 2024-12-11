@@ -109,15 +109,15 @@ int main()
 
 		PositionComponent posComp
 		{
-			{i , i * 10 }, // x
+			{i , i * 0 }, // x
 			{1 , 1}, // y
 			{i , i * 10}  // z
 		};
 		VelocityComponent velComp
 		{
 			{0.1f * i, 0}, // vx
-			{0.05f * i, -1 }, // vy
-			{0.02f * i, 0 }  // vz
+			{0.05f * i, 0 }, // vy
+			{0.02f * i, -2 }  // vz
 		};
 
 		RadiusComponent radiusComp{ {1.0f} }; // radius
@@ -129,7 +129,7 @@ int main()
 	}
 
 	MovementSystem movementSystem(positionManager, velocityManager);
-	//CollisionSystem collisionSystem(positionManager, velocityManager, radiusManager);
+	CollisionSystem collisionSystem(positionManager, velocityManager, radiusManager);
 	RenderingSystem renderingSystem(positionManager, meshManager);
 
 
@@ -166,7 +166,7 @@ int main()
 
 		renderingSystem.Render(entities, shaderprogram);
 		movementSystem.Move(entities, deltaTime);
-
+		collisionSystem.CollideWithBall(entities);
 		//Particles
 		particleEmitter.UpdateParticles(deltaTime);
 		particleEmitter.DrawParticles(shaderprogram, camera);
